@@ -6,29 +6,43 @@
 <title>往期周报归档 · 金融行业一周要闻报告</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',Arial,sans-serif; background:#f8f9fa; color:#333; }
-.hero { background:linear-gradient(135deg,#1a3a5c 0%,#2d5f8a 50%,#1a3a5c 100%); color:#fff; padding:42px 20px 36px; text-align:center; }
-.hero h1 { font-size:26px; letter-spacing:2px; margin-bottom:10px; }
-.hero p { font-size:14px; opacity:.85; }
-.hero .back { display:inline-block; margin-top:16px; color:#cfe3f7; font-size:13px; text-decoration:none; border:1px solid rgba(255,255,255,.35); padding:6px 16px; border-radius:20px; }
-.hero .back:hover { background:rgba(255,255,255,.12); }
-.wrap { max-width:860px; margin:0 auto; padding:28px 16px 60px; }
-.count { font-size:13px; color:#666; margin-bottom:14px; }
-.card { background:#fff; border:1px solid #eaeaea; border-left:4px solid #2d5f8a; border-radius:8px; padding:18px 20px; margin-bottom:14px; box-shadow:0 1px 4px rgba(26,58,92,.06); }
-.card-head { margin-bottom:12px; }
-.issue-title { font-size:16px; font-weight:600; color:#1a3a5c; line-height:1.5; }
-.issue-meta { font-size:12px; color:#888; margin-top:6px; }
-.badge-latest { display:inline-block; background:linear-gradient(135deg,#f0f7ff,#e8f0fe); color:#1565c0; font-size:11px; padding:2px 10px; border-radius:12px; vertical-align:middle; margin-left:6px; }
+body { font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',Arial,sans-serif; background:#f4f6f9; color:#2b3445; -webkit-font-smoothing:antialiased; }
+.hero { background:linear-gradient(120deg,#16324f 0%,#24507a 60%,#16324f 100%); color:#fff; padding:30px 20px 26px; text-align:center; }
+.hero h1 { font-size:21px; letter-spacing:4px; font-weight:600; }
+.hero p { font-size:12.5px; opacity:.78; margin-top:6px; letter-spacing:1px; }
+.hero .back { display:inline-block; margin-top:12px; color:#bcd6ee; font-size:12px; text-decoration:none; border:1px solid rgba(255,255,255,.28); padding:4px 14px; border-radius:14px; transition:all .15s; }
+.hero .back:hover { background:rgba(255,255,255,.12); color:#fff; }
+.wrap { max-width:880px; margin:0 auto; padding:20px 14px 56px; }
+.count { font-size:12px; color:#8a94a6; margin:0 2px 10px; letter-spacing:.5px; }
+.card { background:#fff; border:1px solid #e6eaf0; border-left:3px solid #24507a; border-radius:6px; padding:11px 16px; margin-bottom:8px; transition:box-shadow .2s,border-color .2s; }
+.card:hover { box-shadow:0 3px 14px rgba(22,50,79,.10); border-left-color:#c89b3c; }
+.card-main { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.card-info { min-width:0; flex:1; }
+.issue-title { font-size:14.5px; font-weight:600; color:#16324f; line-height:1.45; }
+.issue-meta { font-size:11.5px; color:#98a2b3; margin-top:3px; }
+.badge-latest { display:inline-block; background:#c89b3c; color:#fff; font-size:10px; font-weight:500; padding:1px 8px; border-radius:9px; vertical-align:1px; margin-left:7px; letter-spacing:1px; }
 .note { color:#b8860b; margin-left:8px; }
-.card-btns { display:flex; gap:10px; flex-wrap:wrap; }
-.btn { flex:1; min-width:150px; text-align:center; text-decoration:none; font-size:14px; padding:10px 14px; border-radius:6px; transition:all .15s; }
-.btn .sz { font-size:11px; opacity:.7; }
-.btn-html { background:#1a3a5c; color:#fff; }
-.btn-html:hover { background:#2d5f8a; }
-.btn-pdf { background:#fff; color:#1565c0; border:1px solid #4a9eff; }
-.btn-pdf:hover { background:#f0f7ff; }
-.footer { text-align:center; font-size:12px; color:#999; margin-top:36px; line-height:1.8; }
-@media (max-width:600px) { .hero h1 { font-size:20px; } .btn { min-width:100%; } }
+.hint { margin-left:10px; color:#c3ccd9; font-size:10.5px; }
+.card:hover .hint { color:#a8b4c6; }
+.card-btns { display:flex; gap:8px; flex-shrink:0; }
+.btn { display:inline-flex; align-items:center; gap:6px; text-decoration:none; font-size:12.5px; padding:6px 14px; border-radius:5px; transition:all .15s; white-space:nowrap; }
+.btn .sz { font-size:10.5px; opacity:.65; margin-left:2px; }
+.btn-html { background:#16324f; color:#fff; }
+.btn-html:hover { background:#24507a; }
+.btn-pdf { background:#fff; color:#24507a; border:1px solid #b9cbdf; }
+.btn-pdf:hover { border-color:#24507a; background:#f0f5fa; }
+.abs { max-height:0; overflow:hidden; opacity:0; transition:max-height .28s ease,opacity .28s ease,margin .28s ease; font-size:12.5px; line-height:1.75; color:#55627a; }
+.card:hover .abs { max-height:220px; opacity:1; margin-top:9px; padding-top:9px; border-top:1px dashed #e3e8ef; }
+.abs-label { display:inline-block; font-size:10.5px; color:#c89b3c; border:1px solid #e8d9b8; border-radius:3px; padding:0 6px; margin-right:8px; letter-spacing:1px; }
+.footer { text-align:center; font-size:11px; color:#a5aebd; margin-top:30px; line-height:1.9; }
+@media (max-width:640px) {
+  .hero h1 { font-size:17px; letter-spacing:2px; }
+  .card-main { flex-direction:column; align-items:flex-start; gap:8px; }
+  .card-btns { width:100%; }
+  .btn { flex:1; justify-content:center; }
+  .hint { display:none; }
+  .abs { max-height:none; opacity:1; margin-top:9px; padding-top:9px; border-top:1px dashed #e3e8ef; }
+}
 </style>
 </head>
 <body>
@@ -38,91 +52,127 @@ body { font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',Arial,sans-s
   <a class="back" href="../index.html">← 返回本期周报</a>
 </div>
 <div class="wrap">
-  <div class="count">共归档 12 期（按定稿时间倒序）</div>
+  <div class="count">共归档 12 期 · 按定稿时间倒序</div>
   
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年8月8日-8月17日） <span class="badge-latest">最新归档</span></div>
-        <div class="issue-meta">定稿 2026-08-17 <span class="note">上期</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年8月8日-8月17日）<span class="badge-latest">最新归档</span></div>
+          <div class="issue-meta">定稿 2026-08-17<span class="note">上期</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-html" href="files/2026-08-08_08-17.html" target="_blank">在线阅读<span class="sz">405 KB</span></a><a class="btn btn-pdf" href="files/2026-08-08_08-17.pdf" target="_blank">PDF 下载<span class="sz">4.7 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-html" href="files/2026-08-08_08-17.html" target="_blank">📄 在线阅读 <span class="sz">405 KB</span></a><a class="btn btn-pdf" href="files/2026-08-08_08-17.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">4.7 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>本期(2026年8月8日-8月17日)金融行业呈现&quot;顶层规划落地、机构人事与并购整合提速、信创硬件放量与AI体系化建设&quot;三大主线。政策端,央行印发《&quot;十五五&quot;改革发展规划》并配套9份行动方案,联合外汇局发布跨国公司本外币跨境资金集中运营新规(9月14日施行),二季度货币政策报告释放短端利率调控新信号;7月金融数据单月贷款负增长3,400亿元,社融靠政府债券托底。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年8月1日-8月10日） </div>
-        <div class="issue-meta">定稿 2026-08-10 </div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年8月1日-8月10日）</div>
+          <div class="issue-meta">定稿 2026-08-10<span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-html" href="files/2026-08-01_08-10.html" target="_blank">在线阅读<span class="sz">314 KB</span></a><a class="btn btn-pdf" href="files/2026-08-01_08-10.pdf" target="_blank">PDF 下载<span class="sz">4.0 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-html" href="files/2026-08-01_08-10.html" target="_blank">📄 在线阅读 <span class="sz">314 KB</span></a><a class="btn btn-pdf" href="files/2026-08-01_08-10.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">4.0 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>本周(2026年8月1日-8月10日)金融行业呈现&quot;强监管落地、高水平开放、机构整合提速&quot;三大主线。监管端,《个人贷款业务明示综合融资成本规定》8月1日正式施行,金发〔2026〕8号文为金融AI立下首部系统性监管框架。开放端,证监会主席吴清在港宣布&quot;惠港五项&quot;,人民币国债期货在港交所挂牌。整合端,东方证券吸收合并上海证券获批、国泰海通私有化国泰君安国际,券商并购重组进入密集落地期。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年7月25日-8月3日） </div>
-        <div class="issue-meta">定稿 2026-08-03 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年7月25日-8月3日）</div>
+          <div class="issue-meta">定稿 2026-08-03<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-25_08-03.pdf" target="_blank">PDF 下载<span class="sz">6.2 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-25_08-03.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">6.2 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>高层人事大换血:超20家A股上市银行高管密集变动,王志恒辞任光大银行行长、黄红元到龄退休交行副行长;工行厦门分行副行长丘远平涉嫌严重违纪违法主动投案;梁惠江拟任中信信托董事长(接掌3.8万亿受托资产);农银汇理基金孙建坤就任总经理;外贸信托陶斐斐获批出任总经理助理银行理财33.66万亿:银行业理财登记托管中心发布半年报告,截至6月末全市场银行理财存续规模33.66万亿元,理财公司占比92.63%达31.18万亿,混合类产品首破万亿信托业</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年7月18日-7月27日） </div>
-        <div class="issue-meta">定稿 2026-07-27 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年7月18日-7月27日）</div>
+          <div class="issue-meta">定稿 2026-07-27<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-18_07-27.pdf" target="_blank">PDF 下载<span class="sz">4.7 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-18_07-27.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">4.7 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>监管执行:金融监管总局发布《严重失信主体名单管理规定》共三十一条,填补金融领域严重失信名单管理制度空白;央行副行长邹澜详解隔夜逆回购操作意图,利率走廊由70BP收窄为50BP对称区间,标志着货币政策框架精细化再进一步;财政部、税务总局明确离岸信托征收个人所得税,设立环节按20%税率征收。高层人事:国开行原行长谭炯出任人保集团党委书记,为年内级别最高金融人事调整;上半年38家A股上市银行发生高管变动,银行高管&quot;换血&quot;加速;温州民商银行董事</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年7月11日-7月20日） </div>
-        <div class="issue-meta">定稿 2026-07-20 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年7月11日-7月20日）</div>
+          <div class="issue-meta">定稿 2026-07-20<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-11_07-20.pdf" target="_blank">PDF 下载<span class="sz">5.4 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-11_07-20.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">5.4 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>央行发布上半年金融统计数据,M2余额同比增长7.4%,社融增量18.14万亿元。6月末M2同比增长7.4%,上半年社会融资规模增量18.14万亿元(同比多增3.67万亿元),人民币贷款增加14.75万亿元。6月新发放企业贷款利率约3.24%、房贷利率约3.04%均处历史低位。央行表示将继续实施适度宽松货币政策。国开行原党委副书记、行长欧阳卫民涉嫌严重违纪违法被查。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年7月4日-7月13日） </div>
-        <div class="issue-meta">定稿 2026-07-13 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年7月4日-7月13日）</div>
+          <div class="issue-meta">定稿 2026-07-13<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-04_07-13.pdf" target="_blank">PDF 下载<span class="sz">2.8 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-07-04_07-13.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">2.8 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>监管政策密集落地,多项制度性安排同步推进。上半年522家银行被罚2951张罚单累计10.14亿元,数据治理违规增长1.22、金融监管总局上半年处罚分析:1255张罚单罚没6.52亿元,执法从重数量转向重质、A股交易新规7月6日起正式实施:主板ST股涨跌幅5%调整为10%,盘后固定价格交等。显示监管层对金融业合规经营和信息科技风险管理重视程度显著提升,将推动全行业加大合规投入。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年6月27日-7月6日） </div>
-        <div class="issue-meta">定稿 2026-07-06 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年6月27日-7月6日）</div>
+          <div class="issue-meta">定稿 2026-07-06<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-27_07-06.pdf" target="_blank">PDF 下载<span class="sz">3.3 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-27_07-06.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">3.3 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>监管政策密集落地,多项制度性安排同步推进。中国人民银行法拟修订明确数字人民币法律地位、证监会就完善上市公司再融资规则公开征求意见:建立储架发行制度,小额快速上限提至6亿、央行等四部门联合发布《金融业网络安全管理办法》征求意见稿等。相关政策文件包括《中国人民银行法》。涉及金额3.0亿元,显示监管层对金融科技&quot;鼓励创新+规范发展&quot;双轨并行,对行业合规发展和系统建设具有重要指导意义;2家银行因网络安全问题被罚、众邦银行出现严重信用风险被接管,</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年6月20日-6月29日） </div>
-        <div class="issue-meta">定稿 2026-06-29 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年6月20日-6月29日）</div>
+          <div class="issue-meta">定稿 2026-06-29<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-20_06-29.pdf" target="_blank">PDF 下载<span class="sz">4.4 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-20_06-29.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">4.4 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>监管政策密集落地,数字人民币法律地位首次明确。《中国人民银行法》修订草案首次提请审议,明确数字人民币法律地位。央行陆家嘴论坛宣布收窄利率走廊至50BP。金融监管总局等三部门组织实施2026年首台(套)重大技术装备保险补偿政策。证监会发布科创板改革八条措施,扩大第五套上市标准至人工智能企业。多项政策密集落地,显示监管层对金融科技&quot;鼓励创新+规范发展&quot;双轨并行。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年6月12日-6月21日） </div>
-        <div class="issue-meta">定稿 2026-06-22 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年6月12日-6月21日）</div>
+          <div class="issue-meta">定稿 2026-06-22<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-12_06-21.pdf" target="_blank">PDF 下载<span class="sz">2.5 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-12_06-21.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">2.5 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>监管政策密集落地,AI安全成重中之重。本周金融监管总局发布银行业保险业AI安全开发应用指导意见(金发〔2026〕8号),为首个银行保险AI专项监管文件。证监会宣布科创板第五套标准扩至AI大模型领域。六部门联合印发《上海国际金融中心发展离岸金融行动方案》。央行行长潘功胜在陆家嘴论坛宣布收窄利率走廊至50BP。多项政策密集落地,显示监管层对金融AI&quot;鼓励创新+规范发展&quot;双轨并行。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻报告（2026年6月1日-6月15日） </div>
-        <div class="issue-meta">定稿 2026-06-15 </div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻报告（2026年6月1日-6月15日）</div>
+          <div class="issue-meta">定稿 2026-06-15<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-06-01_06-15.pdf" target="_blank">PDF 下载<span class="sz">2.7 MB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-html" href="files/2026-06-01_06-15.html" target="_blank">📄 在线阅读 <span class="sz">189 KB</span></a><a class="btn btn-pdf" href="files/2026-06-01_06-15.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">2.7 MB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>本周(2026年6月1日-6月15日)金融行业呈现&quot;强监管、深转型、AI提速&quot;三大主线。监管端,八部门跨境证券整治正式执行,封堵灰色投资通道;中基协换届叠加一日三规齐发,公私募风险隔离全面升级;六部门联合发布数据分类分级指南,金融机构数据治理合规要求加码。行业端,信托三分类三年过渡期收官,行业受托资产达34.13万亿元,上海同步启动养老信托试点;53.5%银行已上线大模型应用,城商行AI竞赛白热化。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻及舆情动态（2026年5月25日-6月1日） </div>
-        <div class="issue-meta">定稿 2026-06-01 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻周报（2026年5月25日-6月1日）</div>
+          <div class="issue-meta">定稿 2026-06-01<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-05-25_06-01.pdf" target="_blank">PDF 下载<span class="sz">702 KB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-05-25_06-01.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">702 KB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>本周金融行业进入政策落地、机构调整的关键观察期:监管层闭环整治非法跨境业务,引导行业合规资金迁移;头部银行、信托公司密集完成组织架构调整与高层轮岗,资源全面向高净值客户、核心资管业务倾斜;金融科技厂商分层竞争格局持续固化,头部厂商在垂直赛道的技术壁垒进一步强化;银行理财子公司同步推进产品&quot;瘦身&quot;与费率让利,应对行业&quot;资产荒&quot;与客户竞争。</div>
     </div>
     <div class="card">
-      <div class="card-head">
-        <div class="issue-title">金融行业一周要闻及舆情动态（2026年5月18日-5月25日） </div>
-        <div class="issue-meta">定稿 2026-05-25 <span class="note">仅存PDF</span></div>
+      <div class="card-main">
+        <div class="card-info">
+          <div class="issue-title">金融行业一周要闻周报（2026年5月18日-5月25日）</div>
+          <div class="issue-meta">定稿 2026-05-25<span class="note">仅存PDF</span><span class="hint">悬浮查看摘要</span></div>
+        </div>
+        <div class="card-btns"><a class="btn btn-pdf" href="files/2026-05-18_05-25.pdf" target="_blank">PDF 下载<span class="sz">767 KB</span></a></div>
       </div>
-      <div class="card-btns"><a class="btn btn-pdf" href="files/2026-05-18_05-25.pdf" target="_blank">⬇️ PDF 下载 <span class="sz">767 KB</span></a></div>
+      <div class="abs"><span class="abs-label">本期摘要</span>2026年5月18日-25日,中国金融行业完成从规模扩张到质量发展的导向切换——监管端重拳整治行业乱象、调整考核规则;银行及资管子公司主动收缩低收益业务、集中出清存量产品;金融科技领域呈现“头部厂商领跑、细分赛道角逐”的格局。本周核心行业信号密集释放:八部门联合出台非法跨境资管整治方案,金融监管总局优化普惠小微贷款考核规则,央行通过MLF操作维持流动性合理充裕;银行理财子公司批量提前终止存量不合规产品、信托公司持续推进合规整改;金融科技</div>
     </div>
   <div class="footer">本报告部分内容由 AI 辅助生成，仅供内部研究参考，不构成任何投资建议<br>恒生电子银信解决方案部</div>
 </div>

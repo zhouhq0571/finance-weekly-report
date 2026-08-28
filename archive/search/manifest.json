@@ -1,0 +1,159 @@
+{
+ "builtAt": "2026-08-28T17:36:09",
+ "issues": [
+  {
+   "id": "current",
+   "label": "本期（2026年8月15日-8月24日）",
+   "shard": "idx_current.json",
+   "htmlUrl": "index.html",
+   "pdfUrl": null,
+   "level": "html",
+   "items": 804,
+   "current": true,
+   "aliasOf": null
+  },
+  {
+   "id": "0815-0824",
+   "label": "2026年8月15日-8月24日",
+   "shard": null,
+   "htmlUrl": "archive/files/2026-08-15_08-24.html",
+   "pdfUrl": "https://www.kdocs.cn/l/cmLYyB3htyc8",
+   "level": "html",
+   "items": 0,
+   "current": false,
+   "aliasOf": "current"
+  },
+  {
+   "id": "0808-0817",
+   "label": "2026年8月8日-8月17日",
+   "shard": "idx_0808-0817.json",
+   "htmlUrl": "archive/files/2026-08-08_08-17.html",
+   "pdfUrl": "https://www.kdocs.cn/l/chhztSO9HXBU",
+   "level": "html",
+   "items": 998,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0801-0810",
+   "label": "2026年8月1日-8月10日",
+   "shard": "idx_0801-0810.json",
+   "htmlUrl": "archive/files/2026-08-01_08-10.html",
+   "pdfUrl": "https://www.kdocs.cn/l/ckjiWG7Cw1ng",
+   "level": "html",
+   "items": 834,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0725-0803",
+   "label": "2026年7月25日-8月3日",
+   "shard": "idx_0725-0803.json",
+   "htmlUrl": "archive/files/2026-07-25_08-03.html",
+   "pdfUrl": "https://www.kdocs.cn/l/csjRIJm9MHdG",
+   "level": "html",
+   "items": 924,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0718-0727",
+   "label": "2026年7月18日-7月27日",
+   "shard": "idx_0718-0727.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/clDExZajrYEy",
+   "level": "pdf",
+   "items": 477,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0711-0720",
+   "label": "2026年7月11日-7月20日",
+   "shard": "idx_0711-0720.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cdXUqGlxaNIb",
+   "level": "pdf",
+   "items": 325,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0704-0713",
+   "label": "2026年7月4日-7月13日",
+   "shard": "idx_0704-0713.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cmF7CAsZRc9P",
+   "level": "pdf",
+   "items": 516,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0627-0706",
+   "label": "2026年6月27日-7月6日",
+   "shard": "idx_0627-0706.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/ceUBO9S1o93f",
+   "level": "pdf",
+   "items": 863,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0620-0629",
+   "label": "2026年6月20日-6月29日",
+   "shard": "idx_0620-0629.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/calayqgU9sVb",
+   "level": "pdf",
+   "items": 349,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0612-0621",
+   "label": "2026年6月12日-6月21日",
+   "shard": "idx_0612-0621.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cpfAxSHPLpHh",
+   "level": "pdf",
+   "items": 324,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0601-0615",
+   "label": "2026年6月1日-6月15日",
+   "shard": "idx_0601-0615.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cmjtn6fCFUMm",
+   "level": "pdf",
+   "items": 266,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0525-0601",
+   "label": "2026年5月25日-6月1日",
+   "shard": "idx_0525-0601.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cqOIptRLPO1g",
+   "level": "pdf",
+   "items": 35,
+   "current": false,
+   "aliasOf": null
+  },
+  {
+   "id": "0518-0525",
+   "label": "2026年5月18日-5月25日",
+   "shard": "idx_0518-0525.json",
+   "htmlUrl": null,
+   "pdfUrl": "https://www.kdocs.cn/l/cbrPMhrjvvB4",
+   "level": "pdf",
+   "items": 35,
+   "current": false,
+   "aliasOf": null
+  }
+ ]
+}

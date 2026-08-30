@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-08-31T01:45:45",
+ "builtAt": "2026-08-31T02:14:58",
  "issues": [
   {
    "id": "current",
@@ -15,13 +15,13 @@
   {
    "id": "0822-0831",
    "label": "2026年8月22日-8月31日",
-   "shard": "idx_0822-0831.json",
+   "shard": null,
    "htmlUrl": "archive/files/2026-08-22_08-31.html",
    "pdfUrl": "https://www.kdocs.cn/l/ciBgkyoOHsdb",
    "level": "html",
-   "items": 1727,
+   "items": 0,
    "current": false,
-   "aliasOf": null
+   "aliasOf": "current"
   },
   {
    "id": "0815-0824",

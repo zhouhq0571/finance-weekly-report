@@ -202,7 +202,7 @@
     if (!groups.length) return;
     var targets = manifest.issues.filter(function (i) {
       if (i.aliasOf) return false;
-      return scope === 'issue' ? i.current : true;
+      return scope === 'issue' ? i.id === CFG.currentId : true;
     });
     listEl.innerHTML = '<div class="fws-loading">检索中…</div>';
     Promise.all(targets.map(loadShard)).then(function () {
@@ -311,7 +311,7 @@
     if (!r) return;
     var q = input.value.trim();
     var iss = r.iss, anchor = r.it.a || '';
-    if (iss.current && CFG.currentId) {
+    if (CFG.currentId && iss.id === CFG.currentId) {
       closeModal();
       locateInPage(q, anchor);
     } else if (iss.level === 'html' && iss.htmlUrl) {

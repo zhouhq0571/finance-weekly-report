@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-08-30T20:20:30",
+ "builtAt": "2026-08-30T23:42:15",
  "issues": [
   {
    "id": "current",
@@ -8,7 +8,7 @@
    "htmlUrl": "index.html",
    "pdfUrl": null,
    "level": "html",
-   "items": 1720,
+   "items": 1752,
    "current": true,
    "aliasOf": null
   },
@@ -17,7 +17,7 @@
    "label": "2026年8月22日-8月31日",
    "shard": null,
    "htmlUrl": "archive/files/2026-08-22_08-31.html",
-   "pdfUrl": "https://www.kdocs.cn/l/cg0OqRECbBSo",
+   "pdfUrl": "https://www.kdocs.cn/l/cancLm07UW01",
    "level": "html",
    "items": 0,
    "current": false,

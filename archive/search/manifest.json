@@ -1,27 +1,38 @@
 {
- "builtAt": "2026-08-28T17:36:09",
+ "builtAt": "2026-08-30T20:20:30",
  "issues": [
   {
    "id": "current",
-   "label": "本期（2026年8月15日-8月24日）",
+   "label": "本期（2026年8月22日-8月31日）",
    "shard": "idx_current.json",
    "htmlUrl": "index.html",
    "pdfUrl": null,
    "level": "html",
-   "items": 804,
+   "items": 1720,
    "current": true,
    "aliasOf": null
   },
   {
-   "id": "0815-0824",
-   "label": "2026年8月15日-8月24日",
+   "id": "0822-0831",
+   "label": "2026年8月22日-8月31日",
    "shard": null,
-   "htmlUrl": "archive/files/2026-08-15_08-24.html",
-   "pdfUrl": "https://www.kdocs.cn/l/cmLYyB3htyc8",
+   "htmlUrl": "archive/files/2026-08-22_08-31.html",
+   "pdfUrl": "https://www.kdocs.cn/l/cg0OqRECbBSo",
    "level": "html",
    "items": 0,
    "current": false,
    "aliasOf": "current"
+  },
+  {
+   "id": "0815-0824",
+   "label": "2026年8月15日-8月24日",
+   "shard": "idx_0815-0824.json",
+   "htmlUrl": "archive/files/2026-08-15_08-24.html",
+   "pdfUrl": "https://www.kdocs.cn/l/cmLYyB3htyc8",
+   "level": "html",
+   "items": 804,
+   "current": false,
+   "aliasOf": null
   },
   {
    "id": "0808-0817",

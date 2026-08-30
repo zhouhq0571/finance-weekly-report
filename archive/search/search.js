@@ -104,9 +104,13 @@
   function closeModal() { overlay.classList.remove('open'); sel = -1; }
   var nav = document.querySelector('.nav-bar');
   if (nav) {
-    var a = document.createElement('a');
-    a.href = 'javascript:void(0)'; a.className = 'fws-navlink'; a.textContent = '🔍 搜索';
-    nav.appendChild(a);
+    // 防重（2026-08-31）：导航栏已硬编码搜索按钮时只绑定事件，不再重复 append
+    var a = nav.querySelector('.fws-navlink');
+    if (!a) {
+      a = document.createElement('a');
+      a.href = 'javascript:void(0)'; a.className = 'fws-navlink'; a.textContent = '🔍 搜索';
+      nav.appendChild(a);
+    }
     a.addEventListener('click', openModal);
   }
   var heroBack = document.querySelector('.hero .back');

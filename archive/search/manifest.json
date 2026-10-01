@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-01T15:19:29",
+ "builtAt": "2026-10-01T15:57:32",
  "issues": [
   {
    "id": "current",
@@ -15,13 +15,13 @@
   {
    "id": "0919-0930",
    "label": "2026年9月19日-9月30日",
-   "shard": null,
+   "shard": "idx_0919-0930.json",
    "htmlUrl": "archive/files/2026-09-19_09-30.html",
    "pdfUrl": "https://www.kdocs.cn/l/cbiFRsOsIyyp",
    "level": "html",
-   "items": 0,
+   "items": 3158,
    "current": false,
-   "aliasOf": "current"
+   "aliasOf": null
   },
   {
    "id": "0912-0921",

@@ -172,7 +172,7 @@
       if (cur && cur.shard) loadShard(cur);
       run();
     }).catch(function () {
-      listEl.innerHTML = '<div class="fws-empty">索引载入失败，请稍后重试</div>';
+      listEl.innerHTML = '<div class="fws-empty">索引载入失败：本地双击打开（file://）时浏览器禁止读取索引文件——请通过本地服务/部署URL访问；如索引文件缺失请重新构建 archive/search/manifest.json</div>';
     });
   }
   function loadShard(issue) {

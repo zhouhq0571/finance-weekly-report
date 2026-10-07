@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-10-07T16:43:31",
+ "builtAt": "2026-10-07T17:26:46",
  "issues": [
   {
    "id": "current",
@@ -24,9 +24,9 @@
    "aliasOf": "current"
   },
   {
-   "id": "0701-0930",
-   "label": "2026年7月1日-9月30日",
-   "shard": "idx_0701-0930.json",
+   "id": "eb1c2f5a5",
+   "label": "金融行业要闻 · 2026Q3 季报",
+   "shard": "idx_eb1c2f5a5.json",
    "htmlUrl": "archive/files/2026-07-01_2026-09-30_季报.html",
    "pdfUrl": "https://www.kdocs.cn/l/cmruue7V0T7U",
    "level": "html",

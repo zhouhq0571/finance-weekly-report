@@ -1,15 +1,26 @@
 {
- "builtAt": "2026-10-19T10:18:02",
+ "builtAt": "2026-11-02T02:00:05",
  "issues": [
   {
    "id": "current",
-   "label": "本期（2026年9月19日-9月30日）",
+   "label": "本期（2026年10月17日-11月2日）",
    "shard": "idx_current.json",
    "htmlUrl": "index.html",
    "pdfUrl": null,
    "level": "html",
-   "items": 3158,
+   "items": 4462,
    "current": true,
+   "aliasOf": null
+  },
+  {
+   "id": "1017-1102",
+   "label": "2026年10月17日-11月2日",
+   "shard": "idx_1017-1102.json",
+   "htmlUrl": "archive/files/2026-10-17_11-02.html",
+   "pdfUrl": "https://www.kdocs.cn/l/cnH5HZQ7mjcW",
+   "level": "html",
+   "items": 4462,
+   "current": false,
    "aliasOf": null
   },
   {
@@ -26,13 +37,13 @@
   {
    "id": "0919-0930",
    "label": "2026年9月19日-9月30日",
-   "shard": null,
+   "shard": "idx_0919-0930.json",
    "htmlUrl": "archive/files/2026-09-19_09-30.html",
    "pdfUrl": "https://www.kdocs.cn/l/cbiFRsOsIyyp",
    "level": "html",
-   "items": 0,
+   "items": 3158,
    "current": false,
-   "aliasOf": "current"
+   "aliasOf": null
   },
   {
    "id": "eb1c2f5a5",

@@ -212,7 +212,7 @@ body.host .tabs{position:static;top:auto}
 }
 </style>
 </head>
-<body data-payload-sha="66a72034dd9527a4b8f00cb00ea8e0909246922e9590ac6d6adcf7bdfbfa1bb8">
+<body data-payload-sha="def24cbe63da8b610bd5a2f0caee63b5a3ac42700845ec39c13bdd7d4164f113">
 <div class="tip" id="tip"></div>
 
 <!-- 加密门禁（仅外网加密版显示；本地明文版自动跳过） -->
@@ -228,7 +228,8 @@ body.host .tabs{position:static;top:auto}
         <span>生成时间 <b id="mBuilt">—</b></span>
       </div>
       <div class="actions">
-        <button class="btn btn-light" id="btnCsv">⬇ 导出明细 CSV</button>
+        <button class="btn btn-light xbtn" id="btnXlsVendors" style="display:none">📊 导出厂商排行 Excel</button>
+        <button class="btn btn-light xbtn" id="btnXlsItems" style="display:none">📋 导出中标明细 Excel</button>
       </div>
     </div>
   </header>
@@ -343,6 +344,19 @@ const fmtWan = v => (v >= 10000 ? (v/10000).toFixed(2)+' 亿' : Number(v).toLoca
 const fmtWan2 = v => Number(v).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
 const esc = s => String(s??'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+let __toastT = null;
+function toast(msg, ms=3500){
+  let t = document.querySelector('.vtoast');
+  if(!t){
+    t = document.createElement('div');
+    t.className = 'vtoast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:200;background:#1b2433;color:#fff;font-size:12.5px;padding:10px 18px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:80vw;transition:opacity .2s;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = 1;
+  clearTimeout(__toastT);
+  __toastT = setTimeout(() => { t.style.opacity = 0; }, ms);
+}
 
 let OV = null, DET = null, DETMAP = {};
 
@@ -692,18 +706,44 @@ function bindTabs(){
   }));
 }
 
-/* ================= CSV 导出 ================= */
+/* ================= Excel 导出（仅本地侧栏宿主提供；网页版无此通道） =================
+   链路：按钮 → DaimonWidget.emit('submit',{mode}) → binding → 宿主 code 执行器生成并
+   用 Excel/WPS 打开（export_items_excel.py / vendor_rank_build.py，专家排版）→
+   artifact 经 binding 回显 toast。 */
 function bindCsv(){
-  $('#btnCsv').onclick = () => {
-    const rows = [['厂商简称','厂商全称','分组','日期','项目名称','采购方','金额(万元)','来源链接']];
-    (DET.vendors||[]).forEach(v => (v.items||[]).forEach(x =>
-      rows.push([v.n, v.full||'', v.g||'', x.d||'', x.p||'', x.os||'', x.amt??'', x.u||''])));
-    const csv = '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
-    a.download = 'IT厂商中标明细_' + new Date().toISOString().slice(0,10) + '.csv';
-    a.click(); URL.revokeObjectURL(a.href);
+  const host = window.DaimonWidget || null;
+  if(!host){ return; } // 网页版不提供导出按钮
+  $$('.xbtn').forEach(b => b.style.display = '');
+  const busy = (id, t) => { const b = $(id); b.disabled = true; b.textContent = t; };
+  const done = (id, t) => { const b = $(id); b.disabled = false; b.textContent = t; };
+  $('#btnXlsVendors').onclick = () => {
+    try{
+      host.emit('submit', { mode: 'vendors' });
+      busy('#btnXlsVendors', '正在生成排行表…');
+    }catch(e){ toast('导出提交失败：' + ((e && e.code) || '未知')); }
   };
+  $('#btnXlsItems').onclick = () => {
+    try{
+      host.emit('submit', { mode: 'items' });
+      busy('#btnXlsItems', '正在生成明细表（5131 条）…');
+    }catch(e){ toast('导出提交失败：' + ((e && e.code) || '未知')); }
+  };
+  try{
+    host.onDataChange((data) => {
+      const m = data && data.main; if(!m) return;
+      if(m.mode === 'vendors' || m.mode === 'items'){
+        if(m.path){
+          toast(m.summary || ('已生成并用 Excel 打开：' + m.path), 6000);
+          done('#btnXls' + (m.mode === 'vendors' ? 'Vendors' : 'Items'),
+               m.mode === 'vendors' ? '📊 导出厂商排行 Excel' : '📋 导出中标明细 Excel');
+        }else{
+          toast(m.summary || '导出未完成', 6000);
+          done('#btnXls' + (m.mode === 'vendors' ? 'Vendors' : 'Items'),
+               m.mode === 'vendors' ? '📊 导出厂商排行 Excel' : '📋 导出中标明细 Excel');
+        }
+      }
+    });
+  }catch(e){ /* 回显通道不可用时按钮仍可用 */ }
 }
 
 /* ================= 入口 ================= */

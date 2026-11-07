@@ -142,13 +142,18 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 @media (max-width:640px){
   .tblwrap{overflow-x:auto}
   table.tb{min-width:640px}
-  /* 水平滚动时冻结前两列（序号+厂商），右侧内容滑动时行首可见（11-07 周老师需求） */
+  /* 水平滚动时冻结前两列（序号+厂商），右侧内容滑动时行首可见（11-07 周老师需求）；
+     平衡处理（同日二次修正）：冻结列限宽 160px+省略号，表格收窄至 560px——
+     厂商列自适应会吞掉全部剩余宽度导致"冻住即锁死"（11-07 手机抓包实证） */
+  table.tb{min-width:560px}
+  .tb col:nth-child(2){width:160px}
   .tb th:nth-child(-n+2),.tb td:nth-child(-n+2){position:sticky;background:#fff;z-index:6}
   .tb th:nth-child(1),.tb td:nth-child(1){left:0}
   .tb th:nth-child(2),.tb td:nth-child(2){left:44px}
   .tb th:nth-child(-n+2){z-index:7}
-  .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
+  .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08);max-width:160px}
   .tb th:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
+  .tb td:nth-child(2) .vname,.tb td:nth-child(2) .vfull{max-width:148px;overflow:hidden;text-overflow:ellipsis}
   /* 窄屏（含侧栏小组件 iframe、手机）保留多栏分块+栏内滚动：栏收窄到可并排两栏 */
   .detwall{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:10px}
   .detrow{padding:2px 8px;font-size:11.5px}

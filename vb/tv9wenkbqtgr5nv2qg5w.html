@@ -140,6 +140,13 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 @media (max-width:640px){
   .tblwrap{overflow-x:auto}
   table.tb{min-width:640px}
+  /* 水平滚动时冻结前两列（序号+厂商），右侧内容滑动时行首可见（11-07 周老师需求） */
+  .tb th:nth-child(-n+2),.tb td:nth-child(-n+2){position:sticky;background:#fff;z-index:6}
+  .tb th:nth-child(1),.tb td:nth-child(1){left:0}
+  .tb th:nth-child(2),.tb td:nth-child(2){left:44px}
+  .tb th:nth-child(-n+2){z-index:7}
+  .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
+  .tb th:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
   /* 窄屏（含侧栏小组件 iframe、手机）保留多栏分块+栏内滚动：栏收窄到可并排两栏 */
   .detwall{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:10px}
   .detrow{padding:2px 8px;font-size:11.5px}
@@ -627,13 +634,14 @@ function renderDet(reset){
   tbl.style.display = '';
   wrap.classList.add('box'); // 表格模式：容器自带垂直/水平滚动条，表头钉在容器顶
   $('#detMore').style.display = '';
-  // 表头/列宽：分组过滤时冗余"每期走势（披露中标金额）"列（窄屏 CSS 隐藏）
-  const withSpark = !!detState.g;
+  // 表头/列宽：分组过滤时冗余"每期走势"列；手机端（<1000px）整列不渲染（11-07 周老师实证修正：
+  // 部分手机视口 CSS 宽 >900 导致纯 CSS 隐藏失效，改为 JS 视口判定 + CSS 双保险）
+  const withSpark = !!detState.g && window.innerWidth >= 1000;
   $('#detCols').innerHTML = withSpark
     ? '<col style="width:44px"><col style="width:30%"><col style="width:80px"><col style="width:28%"><col style="width:58px"><col style="width:112px">'
     : '<col style="width:44px"><col><col style="width:84px"><col style="width:62px"><col style="width:118px">';
   $('#detHead').innerHTML = withSpark
-    ? `<th>#</th><th>厂商</th><th>分组</th><th class="thwrap">${trendHeadDet(detState.s)}</th><th>次数</th><th>金额</th>`
+    ? `<th>#</th><th>厂商</th><th>分组</th><th class="thwrap cspk">${trendHeadDet(detState.s)}</th><th>次数</th><th>金额</th>`
     : '<th>#</th><th>厂商</th><th>分组</th><th>次数</th><th>金额</th>';
   const tb = $('#tbDet tbody');
   if(reset){ detState.shown = 0; tb.innerHTML = ''; }

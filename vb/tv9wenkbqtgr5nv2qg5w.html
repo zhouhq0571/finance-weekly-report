@@ -139,25 +139,26 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .detrow.cp .nm{color:#9a4a08}
 .detrow.hs{background:#edf7f2}
 .detrow.hs .nm{color:#0b6e4f}
+/* 溢出自适应（11-07 三次修正定稿）：不再依赖宽度媒体查询（非常规视口会击穿），
+   由 JS 检测"表格真实横向溢出"才加 .sq 类：窄列+冻结前两列+省略号一次性启用。
+   冻结区上限 ≈204px（44+160），表格收窄 560px，厂商列自适应吞宽导致"冻住即锁死"的教训内建。 */
+.tblwrap.sq{overflow-x:auto}
+.tblwrap.sq table.tb{min-width:560px}
+.tblwrap.sq .tb col:nth-child(2){width:160px}
+.tblwrap.sq .tb th:nth-child(-n+2),.tblwrap.sq .tb td:nth-child(-n+2){position:sticky;background:#fff;z-index:6}
+.tblwrap.sq .tb th:nth-child(1),.tblwrap.sq .tb td:nth-child(1){left:0}
+.tblwrap.sq .tb th:nth-child(2),.tblwrap.sq .tb td:nth-child(2){left:44px}
+.tblwrap.sq .tb th:nth-child(-n+2){z-index:7}
+.tblwrap.sq .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08);max-width:160px}
+.tblwrap.sq .tb th:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
+.tblwrap.sq .tb td:nth-child(2) .vname,.tblwrap.sq .tb td:nth-child(2) .vfull{max-width:148px;overflow:hidden;text-overflow:ellipsis}
+/* 明细表"厂商"列更窄：只显简称（全称行隐去，点行抽屉里仍有全称），11-07 周老师裁定 */
+.tblwrap.sq #tbDet col:nth-child(2){width:110px}
+.tblwrap.sq #tbDet td:nth-child(2){max-width:110px}
+.tblwrap.sq #tbDet td:nth-child(2) .vfull{display:none}
 @media (max-width:640px){
-  .tblwrap{overflow-x:auto}
-  table.tb{min-width:640px}
-  /* 水平滚动时冻结前两列（序号+厂商），右侧内容滑动时行首可见（11-07 周老师需求）；
-     平衡处理（同日二次修正）：冻结列限宽 160px+省略号，表格收窄至 560px——
-     厂商列自适应会吞掉全部剩余宽度导致"冻住即锁死"（11-07 手机抓包实证） */
-  table.tb{min-width:560px}
-  .tb col:nth-child(2){width:160px}
-  .tb th:nth-child(-n+2),.tb td:nth-child(-n+2){position:sticky;background:#fff;z-index:6}
-  .tb th:nth-child(1),.tb td:nth-child(1){left:0}
-  .tb th:nth-child(2),.tb td:nth-child(2){left:44px}
-  .tb th:nth-child(-n+2){z-index:7}
-  .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08);max-width:160px}
-  .tb th:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
-  .tb td:nth-child(2) .vname,.tb td:nth-child(2) .vfull{max-width:148px;overflow:hidden;text-overflow:ellipsis}
-  /* 明细表"厂商"列更窄：只显简称（全称行隐去，点行抽屉里仍有全称），11-07 周老师裁定对标概览效果 */
-  #tbDet col:nth-child(2){width:110px}
-  #tbDet td:nth-child(2){max-width:110px}
-  #tbDet td:nth-child(2) .vfull{display:none}
+  .detrow{padding:2px 8px;font-size:11.5px}
+  .tb th{top:44px}
   /* 窄屏（含侧栏小组件 iframe、手机）保留多栏分块+栏内滚动：栏收窄到可并排两栏 */
   .detwall{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:10px}
   .detrow{padding:2px 8px;font-size:11.5px}
@@ -680,6 +681,7 @@ function renderDet(reset){
     </tr>`;
   }).join(''));
   detState.shown += slice.length;
+  fitTables();
   $('#detMore').textContent = detState.shown >= vs.length ? `共 ${vs.length} 家 · 点击行查看中标明细` : `已加载 ${detState.shown}/${vs.length} 家，下拉加载更多…`;
 }
 function detWallHtml(vs){
@@ -744,6 +746,7 @@ function bindTabs(){
     $$('.tab').forEach(x => x.classList.remove('on')); t.classList.add('on');
     $$('.pane').forEach(p => p.classList.remove('on'));
     $('#' + t.dataset.pane).classList.add('on');
+    fitTables();
   }));
 }
 
@@ -786,6 +789,20 @@ function bindCsv(){
     });
   }catch(e){ /* 回显通道不可用时按钮仍可用 */ }
 }
+
+/* 溢出自适应：表格真实装不下才启用窄列+冻结（renderOv/renderDet/切标签/缩放后调用） */
+function fitTables(){
+  $$('.tblwrap').forEach(w => {
+    const t = w.querySelector('table');
+    if(!t || t.style.display === 'none'){ w.classList.remove('sq'); return; }
+    // 双判据：真实横向溢出 或 容器不足 620px（620=表格舒适最小宽度；纯溢出判据有死锁——
+    // min-width 在 .sq 内，不先加 sq 就永远不会溢出；11-07 溢出自适应改造自验实证）
+    const needsNarrow = w.clientWidth < 620;
+    w.classList.toggle('sq', needsNarrow || w.scrollWidth > w.clientWidth + 4);
+  });
+}
+let __fitT = null;
+window.addEventListener('resize', () => { clearTimeout(__fitT); __fitT = setTimeout(fitTables, 150); });
 
 /* ================= 入口 ================= */
 // 宿主检测：iframe 内（侧栏小组件）顶部 80px 为系统悬浮/拖拽层，整页下移避让，

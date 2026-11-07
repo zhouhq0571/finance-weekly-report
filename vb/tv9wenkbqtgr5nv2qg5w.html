@@ -154,6 +154,10 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
   .tb td:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08);max-width:160px}
   .tb th:nth-child(2){box-shadow:2px 0 3px rgba(16,30,54,.08)}
   .tb td:nth-child(2) .vname,.tb td:nth-child(2) .vfull{max-width:148px;overflow:hidden;text-overflow:ellipsis}
+  /* 明细表"厂商"列更窄：只显简称（全称行隐去，点行抽屉里仍有全称），11-07 周老师裁定对标概览效果 */
+  #tbDet col:nth-child(2){width:110px}
+  #tbDet td:nth-child(2){max-width:110px}
+  #tbDet td:nth-child(2) .vfull{display:none}
   /* 窄屏（含侧栏小组件 iframe、手机）保留多栏分块+栏内滚动：栏收窄到可并排两栏 */
   .detwall{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:10px}
   .detrow{padding:2px 8px;font-size:11.5px}

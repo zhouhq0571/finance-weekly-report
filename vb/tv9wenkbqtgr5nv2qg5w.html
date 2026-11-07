@@ -334,6 +334,7 @@ body.host .tabs{position:static;top:auto}
 
 <script>
 /* ================= 数据挂载点（构建脚本替换） ================= */
+const CDN_BASE = 'https://cdn.jsdelivr.net/gh/zhouhq0571/finance-weekly-report@main/vb/';
 const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-781029aceb.json"};
 const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-781029aceb.json"};
 
@@ -374,7 +375,7 @@ async function gateBoot(){
   // 远程开关两态：pwd=密码常态（当面开放由持密人现场输入）/ closed=收回
   let mode = 'pwd';
   try{
-    const r = await fetch('flag.json', {cache:'no-store'});
+    const r = await fetch(CDN_BASE + 'flag.json', {cache:'no-store'});
     if(r.ok){ const f = await r.json(); if(f.mode==='closed') mode = 'closed'; }
   }catch(e){ /* 开关不可达时按密码常态，安全性不降 */ }
 
@@ -418,7 +419,7 @@ async function tryUnlock(pwd){
     }
     if(!dek) throw new Error('bad password');
     const dekKey = await crypto.subtle.importKey('raw', dek, 'AES-GCM', false, ['decrypt']);
-    const payload = await (await fetch(GATE.payload, {cache:'no-cache'})).json();
+    const payload = await (await fetch(CDN_BASE + GATE.payload, {cache:'no-cache'})).json();
     const gz = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(payload.iv)}, dekKey, b64d(payload.ct));
     const data = JSON.parse(new TextDecoder().decode(await gunzip(gz)));
     gateHide();
@@ -438,7 +439,7 @@ async function gunzip(u8){
 }
 /* 载荷统一装载：enc=解密后解压；plain=直接解压（open 档） */
 async function loadPayload(g){
-  const payload = await (await fetch(g.payload, {cache:'no-cache'})).json();
+  const payload = await (await fetch(CDN_BASE + g.payload, {cache:'no-cache'})).json();
   const gz = g.enc
     ? await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(payload.iv)}, g._dekKey, b64d(payload.ct))
     : b64d(payload.plain);
@@ -769,7 +770,7 @@ try{ if(window.self !== window.top) document.body.classList.add('host'); }catch(
 /* 免密明文版入口：open 档下任何人直接看，但 flag=closed 仍可即时收回（11-06 周老师三问落地） */
 async function plainEntry(){
   try{
-    const r = await fetch('flag.json', {cache:'no-store'});
+    const r = await fetch(CDN_BASE + 'flag.json', {cache:'no-store'});
     if(r.ok){
       const f = await r.json();
       if(f.mode === 'closed'){

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <title>金融 IT 厂商中标看板</title>
 <style>
 :root{
@@ -342,8 +344,8 @@ body.host .tabs{position:static;top:auto}
 <script>
 /* ================= 数据挂载点（构建脚本替换） ================= */
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/zhouhq0571/finance-weekly-report@main/vb/';
-const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-781029aceb.json"};
-const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-781029aceb.json"};
+const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-781029aceb.bin"};
+const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-781029aceb.bin"};
 
 /* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
@@ -426,8 +428,10 @@ async function tryUnlock(pwd){
     }
     if(!dek) throw new Error('bad password');
     const dekKey = await crypto.subtle.importKey('raw', dek, 'AES-GCM', false, ['decrypt']);
-    const payload = await (await fetch(CDN_BASE + GATE.payload, {cache:'no-cache'})).json();
-    const gz = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(payload.iv)}, dekKey, b64d(payload.ct));
+    GATE._dekKey = dekKey;
+    btn.textContent = '下载数据…';
+    const gz = await fetchPayloadBuf(GATE);
+    btn.textContent = '解密渲染中…';
     const data = JSON.parse(new TextDecoder().decode(await gunzip(gz)));
     gateHide();
     boot(data);
@@ -438,20 +442,23 @@ async function tryUnlock(pwd){
   }
 }
 
-/* gzip 解压（载荷分离版：数据先压缩再加密，体积约为原 1/8） */
+/* gzip 解压（载荷分离版：数据先压缩再加密，体积约为原 1/8；v2 起裸二进制传输，无 base64） */
+async function fetchPayloadBuf(g){
+  const buf = new Uint8Array(await (await fetch(CDN_BASE + g.payload, {cache:'no-cache'})).arrayBuffer());
+  if(!g.enc) return buf;                       // open 档：裸 gzip 流
+  return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, g._dekKey, buf.slice(12)));
+}
+async function loadPayload(g){
+  const gz = await fetchPayloadBuf(g);
+  return JSON.parse(new TextDecoder().decode(await gunzip(gz)));
+}
 async function gunzip(u8){
   if(typeof DecompressionStream === 'undefined') throw new Error('浏览器过旧，请升级后访问');
   const stream = new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'));
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }
 /* 载荷统一装载：enc=解密后解压；plain=直接解压（open 档） */
-async function loadPayload(g){
-  const payload = await (await fetch(CDN_BASE + g.payload, {cache:'no-cache'})).json();
-  const gz = g.enc
-    ? await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(payload.iv)}, g._dekKey, b64d(payload.ct))
-    : b64d(payload.plain);
-  return JSON.parse(new TextDecoder().decode(await gunzip(gz)));
-}
+
 
 /* ================= 启动 ================= */
 function boot(data){

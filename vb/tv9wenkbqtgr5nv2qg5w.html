@@ -390,7 +390,7 @@ async function gateBoot(){
   // 远程开关两态：pwd=密码常态（当面开放由持密人现场输入）/ closed=收回
   let mode = 'pwd';
   try{
-    const r = await fetch(CDN_BASE + 'flag.json', {cache:'no-store'});
+    const r = await fetch('flag.json', {cache:'no-store'});
     if(r.ok){ const f = await r.json(); if(f.mode==='closed') mode = 'closed'; }
   }catch(e){ /* 开关不可达时按密码常态，安全性不降 */ }
 
@@ -807,7 +807,7 @@ try{ if(window.self !== window.top) document.body.classList.add('host'); }catch(
 /* 免密明文版入口：open 档下任何人直接看，但 flag=closed 仍可即时收回（11-06 周老师三问落地） */
 async function plainEntry(){
   try{
-    const r = await fetch(CDN_BASE + 'flag.json', {cache:'no-store'});
+    const r = await fetch('flag.json', {cache:'no-store'});
     if(r.ok){
       const f = await r.json();
       if(f.mode === 'closed'){

@@ -100,18 +100,28 @@ a:hover{text-decoration:underline}
 table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .tb th{position:sticky;top:46px;z-index:5;background:#f8fafc;color:var(--ink2);font-size:11.5px;font-weight:600;text-align:center;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 .tb th.thwrap{white-space:normal;line-height:1.35}
-.tb td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:middle}
+.tb td{padding:6px 10px;border-bottom:1px solid var(--line2);vertical-align:middle}
 .tb tbody tr{transition:background .1s}
 .tb tbody tr:hover{background:#f6f9fd}
 .tb tbody tr.clickable{cursor:pointer}
 /* 表格模式（搜索/分组过滤）自带滚动区：垂直+水平滚动条，表头在滚动区内钉住 */
-.tblwrap.box{max-height:calc(100vh - 250px);overflow:auto;border-top:1px solid var(--line2)}
+.tblwrap.box{max-height:calc(100vh - 150px);overflow:auto;border-top:1px solid var(--line2)}
 .tblwrap.box .tb th{top:0}
 .rk{display:inline-flex;width:22px;height:22px;border-radius:7px;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;background:#eef1f6;color:var(--ink2);white-space:nowrap;flex:none}
 .rk.r1{background:linear-gradient(135deg,#ffd76a,#f5b301);color:#5c4400}
 .rk.r2{background:linear-gradient(135deg,#e3e8f0,#c3ccd9);color:#3d4654}
 .rk.r3{background:linear-gradient(135deg,#f0c39a,#d9985f);color:#5c3a12}
 .vname{font-weight:600}
+/* 单行式厂商单元格（11-09 行高收敛：简称+全称同行省略号，一屏可读 20-30 家） */
+.vc{display:flex;align-items:baseline;gap:6px;min-width:0}
+.vc .vname{flex:none;white-space:nowrap}
+.vc .vfull{flex:1;min-width:0;margin-top:0;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 置顶 */
+.pin{flex:none;cursor:pointer;font-size:11px;opacity:0;transition:opacity .12s;filter:grayscale(.4)}
+tr:hover .pin,.pin.on{opacity:1}
+.pin.on{filter:none}
+tr.pin-row td{background:#fffdf2}
+tr.pin-sep td{background:#f4f7fb;font-size:11px;color:var(--ink3);font-weight:600;padding:4px 10px;letter-spacing:.5px}
 .vfull{display:block;font-size:11px;color:var(--ink3);font-weight:400;margin-top:1px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tag{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
 .tag.hs{background:var(--hs-soft);color:var(--hs)}
@@ -119,7 +129,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .amt{font-weight:700;text-align:right;white-space:nowrap}
 .amt small{font-weight:400;color:var(--ink3);font-size:11px}
 .cnt-n{color:var(--ink2);white-space:nowrap;text-align:right}
-.spark{display:block;width:100%;height:26px}
+.spark{display:block;width:100%;height:22px}
 .empty{padding:38px 0;text-align:center;color:var(--ink3);font-size:13px}
 /* 分组过滤态冗余的走势列：窄屏隐藏保阅读体验（周老师 11-06 裁定） */
 @media (max-width:900px){.cspk{display:none}}
@@ -553,6 +563,25 @@ function renderChart(){
   svg.addEventListener('mouseleave', () => tip.style.opacity = 0);
 }
 
+/* ================= 置顶（默认恒生电子；📌 行内/抽屉双入口；localStorage 本机记忆） ================= */
+const PINS_KEY = 'vb_pins_v1';
+function loadPins(){ try{ const p = JSON.parse(localStorage.getItem(PINS_KEY)); return Array.isArray(p) && p.length ? p : ['恒生电子']; }catch(e){ return ['恒生电子']; } }
+let PINS = loadPins();
+const isP = n => PINS.includes(n);
+function togglePin(n){
+  PINS = isP(n) ? PINS.filter(x => x !== n) : [...PINS, n];
+  try{ localStorage.setItem(PINS_KEY, JSON.stringify(PINS)); }catch(e){}
+  renderOv(); renderDet(true);
+  toast(isP(n) ? `已置顶「${n}」` : `已取消置顶「${n}」`);
+}
+function pinIcon(n){
+  return `<span class="pin ${isP(n) ? 'on' : ''}" data-pin="${esc(n)}" title="${isP(n) ? '取消置顶' : '置顶该厂商（置顶层恒显顶部）'}">${isP(n) ? '📌' : '📍'}</span>`;
+}
+function splitPinned(vs){
+  if(!PINS.length) return { pinned: [], rest: vs };
+  return { pinned: vs.filter(v => isP(v.n)), rest: vs.filter(v => !isP(v.n)) };
+}
+
 /* ================= 概览表 ================= */
 let ovState = {q:'', g:'', s:'a'};
 function bindOv(){
@@ -590,15 +619,25 @@ function renderOv(){
   const hd = $('#ovSparkHead'); if(hd) hd.textContent = trendHead(ovState.s);
   const tb = $('#tbOv tbody');
   if(!vs.length){ tb.innerHTML = '<tr><td colspan="6"><div class="empty">无匹配厂商</div></td></tr>'; return; }
-  tb.innerHTML = vs.map((v,i) => `
-    <tr class="clickable" data-n="${esc(v.n)}">
+  const { pinned, rest } = splitPinned(vs);
+  const rankOf = v => vs.indexOf(v) + 1;
+  const rowHtml = v => {
+    const i = rankOf(v) - 1;
+    return `
+    <tr class="clickable ${isP(v.n) ? 'pin-row' : ''}" data-n="${esc(v.n)}">
       <td><span class="rk ${i<3?'r'+(i+1):''}">${i+1}</span></td>
-      <td><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(DETMAP[v.n]?.full || '')}</span></td>
+      <td><div class="vc"><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(DETMAP[v.n]?.full || '')}</span>${pinIcon(v.n)}</div></td>
       <td>${tagHtml(v.g)}</td>
       <td>${trendSpark(v, ovState.s)}</td>
       <td class="cnt-n">${v.c}</td>
       <td class="amt">${fmtWan2(v.a)}<small> 万</small></td>
-    </tr>`).join('');
+    </tr>`;
+  };
+  let html = pinned.map(rowHtml).join('');
+  if(pinned.length) html += `<tr class="pin-sep"><td colspan="6">📌 置顶厂商 ${pinned.length} 家 · 其余 ${rest.length} 家</td></tr>`;
+  html += rest.map(rowHtml).join('');
+  tb.innerHTML = html;
+  fitTables();
 }
 
 /* ================= 明细表（分块渲染） ================= */
@@ -663,19 +702,49 @@ function renderDet(reset){
     $('#detMore').textContent = '';
     return;
   }
-  const slice = vs.slice(detState.shown, detState.shown + CHUNK);
-  tb.insertAdjacentHTML('beforeend', slice.map((v,i) => {
-    const gIdx = detState.shown + i;
-    return `
-    <tr class="clickable" data-n="${esc(v.n)}">
-      <td><span class="rk ${gIdx<3?'r'+(gIdx+1):''}">${gIdx+1}</span></td>
-      <td><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(v.full||'')}</span></td>
+  let ordered = vs;
+  if(reset){
+    const { pinned, rest } = splitPinned(vs);
+    ordered = [...pinned, ...rest];   // 置顶段在首块先渲染，之后块顺序连续
+    detState._ordered = ordered;
+  } else {
+    ordered = detState._ordered || vs;
+  }
+  const slice = ordered.slice(detState.shown, detState.shown + CHUNK);
+  let html = '';
+  if(reset){
+    const { pinned } = splitPinned(vs);
+    const rankOf = v => ordered.indexOf(v) + 1;
+    html += pinned.map(v => {
+      const i = rankOf(v) - 1;
+      return `
+    <tr class="clickable pin-row" data-n="${esc(v.n)}">
+      <td><span class="rk ${i<3?'r'+(i+1):''}">${i+1}</span></td>
+      <td><div class="vc"><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(v.full||'')}</span>${pinIcon(v.n)}</div></td>
       <td>${tagHtml(v.g)}</td>
       ${withSpark ? `<td class="cspk">${trendSpark(v, detState.s)}</td>` : ''}
       <td class="cnt-n">${v.c}</td>
       <td class="amt">${fmtWan2(v.a)}<small> 万</small></td>
     </tr>`;
-  }).join(''));
+    }).join('');
+    if(pinned.length){
+      const span = withSpark ? 6 : 5;
+      html += `<tr class="pin-sep"><td colspan="${span}">📌 置顶厂商 ${pinned.length} 家</td></tr>`;
+    }
+  }
+  html += slice.map((v,i) => {
+    const gIdx = detState.shown + i;
+    return `
+    <tr class="clickable ${isP(v.n) ? 'pin-row' : ''}" data-n="${esc(v.n)}">
+      <td><span class="rk ${gIdx<3?'r'+(gIdx+1):''}">${gIdx+1}</span></td>
+      <td><div class="vc"><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(v.full||'')}</span>${pinIcon(v.n)}</div></td>
+      <td>${tagHtml(v.g)}</td>
+      ${withSpark ? `<td class="cspk">${trendSpark(v, detState.s)}</td>` : ''}
+      <td class="cnt-n">${v.c}</td>
+      <td class="amt">${fmtWan2(v.a)}<small> 万</small></td>
+    </tr>`;
+  }).join('');
+  tb.insertAdjacentHTML('beforeend', html);
   detState.shown += slice.length;
   fitTables();
   $('#detMore').textContent = detState.shown >= vs.length ? `共 ${vs.length} 家 · 点击行查看中标明细` : `已加载 ${detState.shown}/${vs.length} 家，下拉加载更多…`;
@@ -701,9 +770,14 @@ function detWallHtml(vs){
 }
 
 /* ================= 抽屉 ================= */
+function pinFromEvent(e){
+  const p = e.target.closest('.pin');
+  if(p){ e.stopPropagation(); togglePin(p.dataset.pin); return true; }
+  return false;
+}
 function bindDrawer(){
-  $('#tbOv tbody').addEventListener('click', e => { const tr = e.target.closest('tr.clickable'); if(tr) openDrawer(tr.dataset.n); });
-  $('#tbDet tbody').addEventListener('click', e => { const tr = e.target.closest('tr.clickable'); if(tr) openDrawer(tr.dataset.n); });
+  $('#tbOv tbody').addEventListener('click', e => { if(pinFromEvent(e)) return; const tr = e.target.closest('tr.clickable'); if(tr) openDrawer(tr.dataset.n); });
+  $('#tbDet tbody').addEventListener('click', e => { if(pinFromEvent(e)) return; const tr = e.target.closest('tr.clickable'); if(tr) openDrawer(tr.dataset.n); });
   $('#detWall').addEventListener('click', e => { const r = e.target.closest('.detrow'); if(r) openDrawer(r.dataset.n); });
   $('#dClose').onclick = closeDrawer;
   $('#mask').onclick = closeDrawer;
@@ -718,7 +792,9 @@ function openDrawer(n){
   $('#dSub').innerHTML = `
     <span>中标 <b>${items.length}</b> 次</span>
     <span>已确认金额 <b>${fmtWan(sumA)}</b></span>
-    ${v.g ? `<span>${tagHtml(v.g)}</span>` : ''}`;
+    ${v.g ? `<span>${tagHtml(v.g)}</span>` : ''}
+    <button class="btn btn-ghost" id="dPin" style="padding:3px 10px;font-size:11.5px">${isP(n) ? '📌 取消置顶' : '📍 置顶该厂商'}</button>`;
+  $('#dPin').onclick = () => { togglePin(n); openDrawer(n); };
   $('#dBody').innerHTML = items.length ? items.map(x => `
     <div class="itm">
       <div class="row1">

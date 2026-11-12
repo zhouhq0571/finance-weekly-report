@@ -99,7 +99,7 @@
     q: '', neg: '',
     year: [], grade: [], cat: [], org: [], field: 'all',
     yview: 2025, yq: '', oq: '', ocat: '全部', oSort: 'n', pq: '', psort: 'n',
-    page: 1, psize: 120
+    page: 1, psize: 120, orgN: 200, pplN: 120
   };
   var results = [];
 
@@ -237,7 +237,7 @@
     for (var v = 0; v <= max; v += step) {
       var yy = H - pb - (H - pt - pb) * (v / max);
       s += '<line x1="' + pl + '" y1="' + yy.toFixed(1) + '" x2="' + (W - pr) + '" y2="' + yy.toFixed(1) + '" stroke="#eef1f5"/>';
-      s += '<text x="' + (pl - 8) + '" y="' + (yy + 3.5).toFixed(1) + '" font-size="10" fill="#9aa5b4" text-anchor="end">' + v + '</text>';
+      s += '<text x="' + (pl - 8) + '" y="' + (yy + 3.5).toFixed(1) + '" font-size="11.5" fill="#8f9bab" text-anchor="end">' + v + '</text>';
     }
     var cols = ['#8a6a1f', '#14527f', '#3f6178', '#6b7887', '#1a6b57'];
     data.forEach(function (d, i) {
@@ -249,8 +249,8 @@
         s += '<rect x="' + (cx - barW / 2).toFixed(1) + '" y="' + y0.toFixed(1) + '" width="' + barW.toFixed(1) + '" height="' + hh.toFixed(1) + '" fill="' + cols[gi] + '" rx="1.5"/>';
         acc += c;
       });
-      s += '<text x="' + cx + '" y="' + (H - pb + 15) + '" font-size="11.5" fill="#5d6b7c" text-anchor="middle">' + d.y + '</text>';
-      s += '<text x="' + cx + '" y="' + (H - pb - (H - pt - pb) * (d.t / max) - 5).toFixed(1) + '" font-size="11.5" fill="#101d2c" text-anchor="middle" font-weight="600">' + d.t + '</text>';
+      s += '<text x="' + cx + '" y="' + (H - pb + 15) + '" font-size="13" fill="#5d6b7c" text-anchor="middle">' + d.y + '</text>';
+      s += '<text x="' + cx + '" y="' + (H - pb - (H - pt - pb) * (d.t / max) - 5).toFixed(1) + '" font-size="13" fill="#101d2c" text-anchor="middle" font-weight="600">' + d.t + '</text>';
     });
     s += '</svg>';
     $('#c-volume').innerHTML = s;
@@ -356,7 +356,8 @@
       '<span>排序：</span><select class="input" id="sortSel" style="height:30px;padding:0 8px;font-size:12px">' +
       '<option value="yg">年度优先</option><option value="gy">等级优先</option><option value="u">参与单位多</option></select></div>';
     $('#tw-search').innerHTML = total ? tableHTML(shown, {}) : '';
-    $('#cards-search').innerHTML = total ? cardsHTML(shown) : '';
+    $('#cards-search').innerHTML = total ? cardsHTML(shown) +
+      (total > shown.length ? '<button class="btn" data-more="search" style="width:100%;margin:2px 0 10px">显示更多（剩余 ' + (total - shown.length) + ' 项）</button>' : '') : '';
     $('#empty-search').style.display = total ? 'none' : 'block';
     $('#tf-search').firstElementChild.innerHTML = total > shown.length
       ? '<button class="btn sm" id="moreBtn">显示更多（剩余 ' + (total - shown.length) + ' 项）</button>'
@@ -411,11 +412,11 @@
         '<td>' + gradTag(GS[o.best] || '三等奖') + '</td></tr>';
     });
     $('#tw-org').innerHTML = h + '</tbody></table>';
-    $('#cards-org').innerHTML = arr.slice(0, 300).map(function (o) {
+    $('#cards-org').innerHTML = arr.slice(0, S.orgN).map(function (o) {
       return '<div class="rc"><div class="h"><span class="ent" data-org="' + esc(o.full.split(' / ')[0]) + '" style="font-weight:600">' + esc(o.short) + '</span><span style="color:var(--ink4);font-size:11.5px">' + o.cat + '</span></div>' +
         '<div class="ti" style="font-size:12px;color:var(--ink3)">' + esc(o.full.replace(/ \/ /g, ' ／ ')) + '</div>' +
         '<div class="mt"><b>获奖</b>　' + o.n + ' 项　' + gradTag(GS[o.best]) + '</div></div>';
-    }).join('');
+    }).join('') + (arr.length > S.orgN ? '<button class="btn" data-more="org" style="width:100%;margin:2px 0 10px">显示更多（剩余 ' + (arr.length - S.orgN) + ' 家）</button>' : '');
     $('#tf-org').textContent = '显示 ' + Math.min(arr.length, 800) + ' 家';
     $('#o-total').textContent = arr.length;
   }
@@ -439,11 +440,11 @@
         '<td class="wrap" style="font-size:12.5px;color:var(--ink2)">' + esc(best.title) + ' <span style="color:var(--ink4);font-size:11px">(' + best.y + ')</span></td></tr>';
     });
     $('#tw-ppl').innerHTML = h + '</tbody></table>';
-    $('#cards-ppl').innerHTML = top.slice(0, 120).map(function (p) {
+    $('#cards-ppl').innerHTML = arr.slice(0, S.pplN).map(function (p) {
       var ids = personIdx[p.name].slice().sort(function (a, b) { return byId[b].y - byId[a].y; });
       return '<div class="rc"><div class="h"><span class="person" data-p="' + esc(p.name) + '" style="font-weight:600">' + esc(p.name) + '</span>' + gradTag(GS[p.best]) + '</div>' +
         '<div class="mt">参与 ' + p.n + ' 个项目　' + p.years.join(' · ') + '</div></div>';
-    }).join('');
+    }).join('') + (arr.length > S.pplN ? '<button class="btn" data-more="ppl" style="width:100%;margin:2px 0 10px">显示更多（剩余 ' + (arr.length - S.pplN) + ' 人）</button>' : '');
     $('#tf-ppl').textContent = '共 ' + arr.length + ' 位，显示前 ' + top.length + ' 位';
   }
 
@@ -695,6 +696,15 @@
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-tag]');
     if (t) { runQuery(t.dataset.tag); }
+  });
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-more]');
+    if (!b) return;
+    var k = b.dataset.more;
+    if (k === 'search') { S.page++; renderSearch(); }
+    else if (k === 'org') { S.orgN += 200; renderOrg(); }
+    else if (k === 'ppl') { S.pplN += 200; renderPpl(); }
   });
 
   $('#top').onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };

@@ -99,7 +99,7 @@
     q: '', neg: '',
     year: [], grade: [], cat: [], org: [], field: 'all',
     yview: 2025, yq: '', oq: '', ocat: '全部', oSort: 'n', pq: '', psort: 'n',
-    page: 1, psize: 120, orgN: 200, pplN: 120
+    page: 1, psize: 120, orgN: 200, pplN: 120, yearN: 60
   };
   var results = [];
 
@@ -380,7 +380,8 @@
     var rows = R.filter(function (r) { return (!y || r.y === y) && (!S.yq || matchRecord(r, tokenize(S.yq))); });
     rows.sort(function (a, b) { return a.y - b.y || (GC[a.grade] - GC[b.grade]) || a.seq - b.seq; });
     $('#tw-year').innerHTML = tableHTML(rows, { noYear: !!y });
-    $('#cards-year').innerHTML = cardsHTML(rows);
+    $('#cards-year').innerHTML = cardsHTML(rows.slice(0, S.yearN)) +
+      (rows.length > S.yearN ? '<button class="btn" data-more="year" style="width:100%;margin:2px 0 10px">显示更多（剩余 ' + (rows.length - S.yearN) + ' 项）</button>' : '');
     $('#tf-year').textContent = (y ? y + ' 年度' : '全部年度') + '　共 ' + rows.length + ' 项';
     $$('#y-tabs .chip').forEach(function (c) { c.classList.toggle('on', +c.dataset.y === S.yview); });
   }
@@ -705,6 +706,7 @@
     if (k === 'search') { S.page++; renderSearch(); }
     else if (k === 'org') { S.orgN += 200; renderOrg(); }
     else if (k === 'ppl') { S.pplN += 200; renderPpl(); }
+    else if (k === 'year') { S.yearN += 60; renderYear(); }
   });
 
   $('#top').onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };

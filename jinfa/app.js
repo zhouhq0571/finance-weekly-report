@@ -611,7 +611,9 @@
     var c = $('#y-tabs');
     var mk = function (v, label) {
       var b = document.createElement('button');
-      b.className = 'chip' + (S.yview === v ? ' on' : ''); b.dataset.y = v; b.textContent = label;
+      var n = v ? R.filter(function (r) { return r.y === v; }).length : R.length;
+      b.className = 'chip' + (S.yview === v ? ' on' : ''); b.dataset.y = v;
+      b.innerHTML = label + '<span class="n">' + n + '</span>';
       b.onclick = function () { S.yview = v; renderYear(); };
       return b;
     };

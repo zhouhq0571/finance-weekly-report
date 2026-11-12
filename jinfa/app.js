@@ -182,17 +182,19 @@
       return '<span class="person" data-p="' + esc(p) + '">' + esc(p) + '</span>';
     }).join('<span style="color:var(--ink4)">、</span>');
     if (r.people.length > lim) {
-      out += '<span style="color:var(--ink4)">、</span><span class="more" data-people="' + esc(r.id) + '">等 ' + r.people.length + ' 人</span>';
+      out += '<span style="color:var(--ink4)"> </span><span class="more" data-people="' + esc(r.id) + '">等' + r.people.length + '人</span>';
     }
     return out;
   }
   function tableHTML(rows, opt) {
     opt = opt || {};
-    var h = '<table><colgroup><col class="col-y"><col class="col-s"><col class="col-g"><col><col class="col-u"><col class="col-p"></colgroup>' +
-      '<thead><tr><th>年度</th><th>序号</th><th>等级</th><th>项目名称</th><th>完成单位</th><th>主要完成人</th></tr></thead><tbody>';
+    var noY = !!opt.noYear;
+    var h = '<table' + (noY ? ' class="noY"' : '') + '><colgroup>' + (noY ? '' : '<col class="col-y">') +
+      '<col class="col-s"><col class="col-g"><col><col class="col-u"><col class="col-p"></colgroup>' +
+      '<thead><tr>' + (noY ? '' : '<th>年度</th>') + '<th>序号</th><th>等级</th><th>项目名称</th><th>完成单位</th><th>主要完成人</th></tr></thead><tbody>';
     rows.forEach(function (r) {
       h += '<tr>' +
-        '<td class="nowrap"><span class="yr">' + r.y + '</span></td>' +
+        (noY ? '' : '<td class="nowrap"><span class="yr">' + r.y + '</span></td>') +
         '<td class="num" style="color:var(--ink3)">' + r.seq + '</td>' +
         '<td>' + gradTag(r.grade) + '</td>' +
         '<td class="wrap"><span class="ent" data-proj="' + esc(r.id) + '">' + esc(r.title) + '</span></td>' +
@@ -376,7 +378,7 @@
     var y = S.yview;
     var rows = R.filter(function (r) { return (!y || r.y === y) && (!S.yq || matchRecord(r, tokenize(S.yq))); });
     rows.sort(function (a, b) { return a.y - b.y || (GC[a.grade] - GC[b.grade]) || a.seq - b.seq; });
-    $('#tw-year').innerHTML = tableHTML(rows);
+    $('#tw-year').innerHTML = tableHTML(rows, { noYear: !!y });
     $('#cards-year').innerHTML = cardsHTML(rows);
     $('#tf-year').textContent = (y ? y + ' 年度' : '全部年度') + '　共 ' + rows.length + ' 项';
     $$('#y-tabs .chip').forEach(function (c) { c.classList.toggle('on', +c.dataset.y === S.yview); });

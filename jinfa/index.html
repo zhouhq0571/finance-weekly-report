@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="2023—2025 年度金融科技发展奖获奖项目全量索引：项目、完成单位、完成人跨年检索与统计分析。">
+<title>金融科技发展奖获奖项目索引（2023—2025）</title>
+<link rel="preload" href="data.js" as="script">
+<style>
+:root{
+  --paper:#f4f5f7; --card:#ffffff;
+  --ink:#101d2c; --ink2:#3b4b5d; --ink3:#78859a; --ink4:#9aa5b4;
+  --line:#e2e7ee; --line2:#eef1f6;
+  --brand:#0d3b66; --brand2:#14567f; --brand-soft:#eaf1f7;
+  --gold:#8f7024; --seal:#b03127;
+  --g0:#8a6a1f; --g0b:#f6efd9;
+  --g1:#14527f; --g1b:#e8f0f7;
+  --g2:#3f6178; --g2b:#edf3f7;
+  --g3:#6b7887; --g3b:#f0f3f6;
+  --g4:#1a6b57; --g4b:#e7f4ef;
+  --serif:"Songti SC","STSong","Noto Serif SC",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --navh:52px;
+  --shadow:0 1px 2px rgba(16,29,44,.04),0 6px 18px rgba(16,29,44,.05);
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  font-family:var(--sans);background:var(--paper);color:var(--ink);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+a{color:var(--brand2);text-decoration:none}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font-family:inherit;font-size:inherit;color:inherit}
+::selection{background:#cfe0ef}
+
+/* ---------- 报头 ---------- */
+.masthead{
+  background:
+    radial-gradient(120% 140% at 88% -20%,rgba(120,170,210,.30) 0%,rgba(120,170,210,0) 55%),
+    linear-gradient(155deg,#0a1b2c 0%,#0d3355 55%,#0a2138 100%);
+  color:#fff;position:relative;overflow:hidden;
+}
+.masthead::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:linear-gradient(90deg,rgba(190,155,80,0),#be9b50 18%,#e6cf9a 50%,#be9b50 82%,rgba(190,155,80,0));
+  opacity:.85;
+}
+.mh-in{max-width:1240px;margin:0 auto;padding:30px 28px 26px;position:relative}
+.mh-top{display:flex;justify-content:space-between;align-items:flex-start;gap:28px}
+.eyebrow{
+  font-size:11.5px;letter-spacing:.22em;color:#b9cde0;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow i{display:block;width:26px;height:1px;background:#be9b50;opacity:.9}
+h1{
+  font-family:var(--serif);font-weight:600;font-size:34px;line-height:1.28;
+  letter-spacing:.015em;margin:12px 0 0;
+}
+h1 .thin{font-weight:400;color:#c6d7e6}
+.mh-sub{margin-top:10px;color:#adc2d6;font-size:13px;letter-spacing:.02em}
+.mh-sub b{color:#fff;font-weight:600}
+.mh-meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px;color:#9db4c9}
+.mh-meta span{display:inline-flex;align-items:center;gap:6px}
+.mh-meta em{font-style:normal;color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+.seal-box{flex:0 0 auto;text-align:center;padding:5px 6px 3px;background:#fbf7ee;
+  border-radius:2px;box-shadow:0 2px 10px rgba(4,12,22,.28);transform:rotate(-1.5deg)}
+.seal-box img{
+  width:62px;display:block;mix-blend-mode:multiply;opacity:.96;
+  filter:saturate(1.06) contrast(1.03);
+}
+.seal-box .cap{font-size:10.5px;color:#9db4c9;letter-spacing:.3em;margin-top:4px}
+
+/* ---------- KPI ---------- */
+.kpis{max-width:1240px;margin:-1px auto 0;padding:0 28px;display:grid;
+  grid-template-columns:repeat(4,1fr);gap:0;position:relative;z-index:2}
+.kpi{background:var(--card);border-right:1px solid var(--line);padding:16px 18px}
+.kpi:first-child{border-radius:0 0 0 2px}
+.kpi:last-child{border-right:none}
+.kpis{border-bottom:1px solid var(--line);background:var(--card);box-shadow:0 1px 0 rgba(16,29,44,.03)}
+.kpi .k{font-size:11.5px;color:var(--ink3);letter-spacing:.08em}
+.kpi .v{font-family:var(--serif);font-size:27px;line-height:1.15;margin-top:4px;letter-spacing:.01em}
+.kpi .v small{font-family:var(--sans);font-size:12px;color:var(--ink3);margin-left:4px;letter-spacing:0}
+.kpi .d{font-size:11.5px;color:var(--ink4);margin-top:2px}
+
+/* ---------- 导航 ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:1240px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:4px;height:var(--navh)}
+.tab{position:relative;padding:0 15px;height:var(--navh);display:inline-flex;align-items:center;
+  font-size:13.5px;color:var(--ink2);white-space:nowrap;letter-spacing:.02em}
+.tab:hover{color:var(--brand)}
+.tab.on{color:var(--brand);font-weight:600}
+.tab.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--brand)}
+.nav-sp{flex:1}
+.qbox{position:relative;display:flex;align-items:center}
+.qbox input{
+  width:230px;height:32px;border:1px solid var(--line);background:#fbfcfd;border-radius:16px;
+  padding:0 34px 0 32px;font-size:12.5px;outline:none;transition:.18s;
+}
+.qbox input:focus{width:300px;border-color:#9fbed8;background:#fff;box-shadow:0 0 0 3px rgba(20,86,127,.08)}
+.qbox .ic{position:absolute;left:11px;color:var(--ink4);font-size:13px;pointer-events:none}
+.qbox kbd{position:absolute;right:9px;font-family:var(--sans);font-size:10px;color:var(--ink4);
+  border:1px solid var(--line);border-radius:3px;padding:0 4px;background:#fff}
+
+/* ---------- 主体 ---------- */
+.main{max-width:1240px;margin:0 auto;padding:26px 28px 80px}
+.view{display:none}
+.view.on{display:block;animation:fade .22s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.sec{margin-bottom:26px}
+.sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
+.sec-t{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.03em;
+  padding-left:11px;position:relative;line-height:1.3}
+.sec-t::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;background:var(--brand)}
+.sec-t em{font-style:normal;font-family:var(--sans);font-size:11px;color:var(--ink4);
+  margin-left:9px;letter-spacing:.14em;font-weight:400;vertical-align:1px}
+.sec-a{font-size:12px;color:var(--ink3)}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pad{padding:18px 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+/* ---------- 表格 ---------- */
+.tw{overflow:auto;max-height:none;-webkit-overflow-scrolling:touch;border-radius:var(--radius)}
+.tw::-webkit-scrollbar{height:10px;width:10px}
+.tw::-webkit-scrollbar-track{background:#f2f4f8;border-radius:6px}
+.tw::-webkit-scrollbar-thumb{background:#c6d0dc;border-radius:6px;border:2px solid #f2f4f8}
+.tw::-webkit-scrollbar-thumb:hover{background:#a9b6c6}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+thead th{
+  position:sticky;top:0;z-index:5;background:#f7f9fb;color:#5d6b7c;font-weight:600;
+  font-size:11.5px;letter-spacing:.09em;text-align:left;padding:10px 12px;
+  border-bottom:1px solid #dfe5ed;white-space:nowrap;
+}
+thead th.num{text-align:right}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fafcfe}
+tbody tr.hl{background:#fffaf0}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.nowrap{white-space:nowrap}
+.wrap{white-space:normal;word-break:break-word}
+.tw.nots thead th{position:static}
+.tfoot{padding:10px 14px;border-top:1px solid var(--line);background:#fbfcfd;
+  font-size:12px;color:var(--ink3);display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+/* 年份徽标 */
+.yr{display:inline-block;font-size:11px;color:#4a5b6d;background:#eef2f7;border:1px solid #e0e6ee;
+  border-radius:4px;padding:1px 6px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.yr.cur{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* 等级 */
+.gd{display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:600;
+  padding:2px 9px;border-radius:11px;letter-spacing:.04em;white-space:nowrap;border:1px solid transparent}
+.gd.s0{color:var(--g0);background:var(--g0b);border-color:#eadfbc}
+.gd.s1{color:var(--g1);background:var(--g1b);border-color:#d5e4f0}
+.gd.s2{color:var(--g2);background:var(--g2b);border-color:#dae4ec}
+.gd.s3{color:var(--g3);background:var(--g3b);border-color:#e3e8ee}
+.gd.s4{color:var(--g4);background:var(--g4b);border-color:#cfe7de}
+
+/* 可交互实体 */
+.ent{color:var(--ink);cursor:pointer;border-bottom:1px dotted #c3ccd8;transition:.12s}
+.ent:hover{color:var(--brand2);border-bottom-color:var(--brand2);background:#f2f7fb}
+.person{color:#2b3d50;cursor:pointer;border-bottom:1px dotted #cdd5df}
+.person:hover{color:var(--brand2);border-bottom-color:var(--brand2)}
+.tag{display:inline-block;font-size:11px;color:#41586e;background:#f1f5f9;border:1px solid #e3eaf2;
+  border-radius:4px;padding:1px 7px;margin:1px 4px 1px 0;letter-spacing:.02em}
+.more{color:var(--ink4);font-size:11.5px;cursor:pointer;margin-left:2px}
+.more:hover{color:var(--brand2)}
+
+/* ---------- 控件 ---------- */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.input{height:38px;border:1px solid #d8e0ea;background:#fff;border-radius:8px;padding:0 13px;
+  font-size:13.5px;outline:none;transition:.16s;min-width:0}
+.input:focus{border-color:#8fb2cd;box-shadow:0 0 0 3px rgba(20,86,127,.08)}
+.big-q{position:relative;flex:1 1 420px}
+.big-q input{width:100%;height:46px;font-size:15px;padding-left:42px;border-radius:10px}
+.big-q .ic{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--ink4);font-size:16px}
+.big-q .clr{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink4);font-size:16px;display:none}
+.btn{height:38px;padding:0 16px;border-radius:8px;border:1px solid #d8e0ea;background:#fff;
+  font-size:13px;color:var(--ink2);transition:.15s;white-space:nowrap}
+.btn:hover{border-color:#9fbed8;color:var(--brand)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.pri:hover{background:var(--brand2);border-color:var(--brand2);color:#fff}
+.btn.sm{height:30px;padding:0 11px;font-size:12px;border-radius:6px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-size:12.5px;padding:4px 12px;border-radius:14px;border:1px solid #dfe5ee;background:#fff;
+  color:#4c5d70;transition:.15s;white-space:nowrap}
+.chip:hover{border-color:#a8c2d6;color:var(--brand)}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:500}
+.chip .n{opacity:.62;font-size:11px;margin-left:4px;font-variant-numeric:tabular-nums}
+.adv{display:none;margin-top:12px;padding:16px 18px;background:#fbfcfd;border:1px solid var(--line);
+  border-radius:10px}
+.adv.on{display:block;animation:fade .18s ease}
+.frow{display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:start;padding:7px 0}
+.frow>label{font-size:12px;color:var(--ink3);padding-top:6px;letter-spacing:.04em}
+.fhint{font-size:11.5px;color:var(--ink4);margin-top:10px;line-height:1.7}
+.fhint code{background:#eef2f7;border-radius:3px;padding:1px 5px;font-family:ui-monospace,monospace;font-size:11px}
+
+/* 结果条 */
+.resbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:2px 2px 12px;font-size:12.5px;color:var(--ink3)}
+.resbar b{color:var(--ink);font-size:15px;font-family:var(--serif);font-variant-numeric:tabular-nums}
+.resbar .kw{background:#fff6e5;color:#8a5d10;border-radius:3px;padding:0 4px;font-weight:600}
+
+/* ---------- 浮层 ---------- */
+.pop{position:fixed;z-index:200;max-width:430px;background:#fff;border:1px solid #dbe3ec;
+  border-radius:10px;box-shadow:0 12px 40px rgba(15,32,52,.16),0 2px 8px rgba(15,32,52,.08);
+  padding:0;display:none;overflow:hidden}
+.pop.on{display:block;animation:pop .14s ease}
+@keyframes pop{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.pop-h{padding:11px 14px;border-bottom:1px solid var(--line2);background:#fafbfd}
+.pop-h .t{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.4}
+.pop-h .s{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.pop-b{max-height:330px;overflow:auto;padding:6px 0}
+.pop-b::-webkit-scrollbar{width:8px}
+.pop-b::-webkit-scrollbar-thumb{background:#d3dbe5;border-radius:4px}
+.py{display:flex;align-items:center;gap:8px;padding:5px 14px 3px;font-size:11px;color:var(--ink4);
+  letter-spacing:.12em;background:#fcfdfe}
+.pit{padding:7px 14px;border-bottom:1px solid #f4f6f9;display:flex;gap:8px;align-items:flex-start}
+.pit:last-child{border-bottom:none}
+.pit:hover{background:#f8fbfd}
+.pit .g{flex:0 0 auto}
+.pit .x{font-size:12.5px;line-height:1.45;color:var(--ink2)}
+.pit .x i{font-style:normal;color:var(--ink4);font-size:11px;display:block;margin-top:1px}
+
+/* 抽屉 */
+.drawer{position:fixed;inset:0;z-index:300;display:none}
+.drawer.on{display:block}
+.dmask{position:absolute;inset:0;background:rgba(12,24,38,.32);backdrop-filter:blur(1px);animation:fade .18s}
+.dpanel{position:absolute;top:0;right:0;bottom:0;width:min(560px,100%);background:#fff;
+  box-shadow:-14px 0 40px rgba(12,24,38,.14);display:flex;flex-direction:column;animation:slide .22s ease}
+@keyframes slide{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+.dh{padding:18px 22px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.dh h3{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.35}
+.dh .s{font-size:12px;color:var(--ink3);margin-top:5px}
+.dx{font-size:20px;color:var(--ink4);line-height:1;padding:2px 4px}
+.db{flex:1;overflow:auto;padding:16px 22px 30px}
+.db::-webkit-scrollbar{width:8px}
+.db::-webkit-scrollbar-thumb{background:#d3dbe5;border-radius:4px}
+.kv{display:grid;grid-template-columns:74px 1fr;gap:8px 12px;font-size:13px;margin-bottom:16px}
+.kv dt{color:var(--ink3);font-size:12px}
+.kv dd{color:var(--ink)}
+.dlist .ditem{padding:11px 0;border-bottom:1px solid var(--line2);display:flex;gap:10px;align-items:flex-start}
+.ditem .ti{font-size:13.5px;line-height:1.5}
+.ditem .mt{font-size:11.5px;color:var(--ink3);margin-top:3px}
+
+/* ---------- 图表 ---------- */
+.chart{width:100%;overflow:hidden}
+.bars{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.bar-row{display:grid;grid-template-columns:118px 1fr 46px;gap:10px;align-items:center;font-size:12px}
+.bar-row .lab{color:var(--ink2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:18px;background:#f2f5f8;border-radius:3px;overflow:hidden;display:flex}
+.bar-track i{display:block;height:100%}
+.bar-row .val{color:var(--ink3);font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:12px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.hm{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px}
+.hm th{font-weight:500;color:var(--ink3);font-size:11px;padding:3px 4px;text-align:center;background:none;position:static;letter-spacing:.02em}
+.hm td{padding:0;text-align:center;height:30px;border-radius:3px;font-size:11.5px;border:none}
+.hm tbody tr:hover{background:none}
+.tags-cloud{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;padding:4px 0}
+.tg{display:inline-flex;align-items:baseline;gap:5px;padding:4px 11px;border-radius:5px;
+  background:#f5f8fb;border:1px solid #e6ecf3;color:#3d5468;cursor:pointer;transition:.14s}
+.tg:hover{background:#eaf2f8;border-color:#c9dced;color:var(--brand)}
+.tg b{font-weight:600}
+.tg .c{font-size:10.5px;color:var(--ink4);font-variant-numeric:tabular-nums}
+
+/* 洞察 */
+.ins{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.ins-i{padding:14px 16px;border-left:2px solid #cfd9e4;background:#fbfcfd;border-radius:0 6px 6px 0}
+.ins-i b{display:block;font-size:13px;margin-bottom:4px;color:var(--ink)}
+.ins-i span{font-size:12.5px;color:var(--ink2);line-height:1.65}
+.ins-i em{font-style:normal;color:var(--g1);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* 名单表列宽 */
+.tb-year table{table-layout:fixed;min-width:1050px}
+#tw-search{max-height:calc(100vh - 230px)}
+#tw-org{max-height:calc(100vh - 210px)}
+#tw-ppl{max-height:calc(100vh - 210px)}
+.col-y{width:66px}.col-s{width:58px}.col-g{width:92px}.col-u{width:250px}.col-p{width:300px}
+.tb-org table{min-width:880px;table-layout:fixed}
+.tb-ppl table{min-width:760px;table-layout:fixed}
+
+/* 移动端卡片 */
+.cards{display:none}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin-bottom:10px}
+.rc .h{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.rc .ti{font-size:14px;line-height:1.5;color:var(--ink);font-weight:500;margin-bottom:6px}
+.rc .mt{font-size:12px;color:var(--ink3);line-height:1.7}
+.rc .mt b{color:var(--ink2);font-weight:500}
+
+/* 空态 */
+.empty{padding:60px 20px;text-align:center;color:var(--ink3);font-size:13.5px}
+.empty b{display:block;font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:6px}
+
+/* 页脚 */
+.foot{border-top:1px solid var(--line);background:#fff;margin-top:20px}
+.foot-in{max-width:1240px;margin:0 auto;padding:26px 28px 34px;display:flex;justify-content:space-between;
+  gap:24px;align-items:flex-end;flex-wrap:wrap}
+.colo{font-size:12px;color:var(--ink3);line-height:1.9}
+.colo b{font-family:var(--serif);font-size:15px;color:var(--ink);font-weight:600;letter-spacing:.1em}
+.sig{display:flex;align-items:center;gap:12px}
+.sig img{width:54px;mix-blend-mode:multiply;transform:rotate(-3deg);opacity:.92}
+.sig .t{font-size:11.5px;color:var(--ink4);letter-spacing:.2em;line-height:1.8}
+
+/* 回到顶部 */
+.top{position:fixed;right:22px;bottom:22px;width:40px;height:40px;border-radius:50%;background:#fff;
+  border:1px solid var(--line);box-shadow:var(--shadow);color:var(--ink3);display:none;align-items:center;
+  justify-content:center;z-index:80;font-size:15px}
+.top.on{display:flex}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:1024px){
+  .mh-in,h1{font-size:29px}
+  .kpis{grid-template-columns:repeat(4,1fr)}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .ins{grid-template-columns:1fr}
+}
+@media(max-width:820px){
+  .mh-in{padding:22px 18px 20px}
+  h1{font-size:24px}
+  .mh-sub{font-size:12px}
+  .seal-box img{width:52px}
+  .kpis{grid-template-columns:repeat(2,1fr);padding:0 18px}
+  .kpi:nth-child(2){border-right:none}
+  .kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--line)}
+  .nav-in{padding:0 12px;gap:0}
+  .tab{padding:0 11px;font-size:13px}
+  .nav-sp,.qbox{display:none}
+  .main{padding:18px 16px 60px}
+  .sec-t{font-size:16.5px}
+  .tb-year,.tb-org,.tb-ppl{display:none}
+  .cards{display:block}
+  .frow{grid-template-columns:1fr;gap:4px}
+  .frow>label{padding-top:0}
+  .bar-row{grid-template-columns:92px 1fr 40px}
+  .foot-in{padding:22px 18px 28px}
+  .dpanel{width:100%}
+  .pop{max-width:calc(100vw - 24px)}
+}
+@media(max-width:420px){
+  h1{font-size:21px}
+  .kpi .v{font-size:23px}
+}
+@media print{
+  .nav,.top,.qbox{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="mh-in">
+    <div class="mh-top">
+      <div>
+        <div class="eyebrow"><i></i>FinTech Development Award · 2023—2025</div>
+        <h1>金融科技发展奖<span class="thin">获奖项目索引</span></h1>
+        <div class="mh-sub">三年度全量名单 · <b id="mhN">844</b> 个项目 · <b id="mhO">462</b> 家完成单位 · <b id="mhP">8,347</b> 位主要完成人</div>
+        <div class="mh-meta">
+          <span>数据年度 <em>2023 / 2024 / 2025</em></span>
+          <span>检索维度 <em>项目 · 单位 · 人物 · 机构类别</em></span>
+          <span>编制 <em>周红青</em></span>
+          <span>更新 <em id="mhD">2026-11-12</em></span>
+        </div>
+      </div>
+      <div class="seal-box">
+        <img src="seal.jpg" alt="周红青印">
+        <div class="cap">印</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="kpis">
+  <div class="kpi"><div class="k">获奖项目</div><div class="v" id="k1">844<small>项</small></div><div class="d" id="k1d">三年累计</div></div>
+  <div class="kpi"><div class="k">完成单位</div><div class="v" id="k2">462<small>家</small></div><div class="d" id="k2d">去重主体</div></div>
+  <div class="kpi"><div class="k">主要完成人</div><div class="v" id="k3">8,347<small>人</small></div><div class="d" id="k3d">参与项目人次 12,000+</div></div>
+  <div class="kpi"><div class="k">机构类别</div><div class="v" id="k4">12<small>类</small></div><div class="d" id="k4d">监管 · 银行 · 证券 · 保险 · 科技</div></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="tab on" data-v="over">总览</button>
+    <button class="tab" data-v="search">项目检索</button>
+    <button class="tab" data-v="year">年度名录</button>
+    <button class="tab" data-v="org">完成单位</button>
+    <button class="tab" data-v="ppl">完成人</button>
+    <button class="tab" data-v="about">说明</button>
+    <div class="nav-sp"></div>
+    <div class="qbox">
+      <span class="ic">⌕</span>
+      <input id="gq" type="search" placeholder="全站检索：项目 / 单位 / 人名" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- 总览 -->
+  <section class="view on" id="v-over">
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">三年概览<em>OVERVIEW</em></div><div class="sec-a">按名单公示口径统计，单位按完成单位主体去重</div></div>
+      <div class="grid2">
+        <div class="panel pad">
+          <div style="font-size:12.5px;color:var(--ink3);margin-bottom:10px">年度评审规模与等级结构（单位：项）</div>
+          <div class="chart" id="c-volume"></div>
+          <div class="legend" id="l-volume"></div>
+        </div>
+        <div class="panel pad">
+          <div style="font-size:12.5px;color:var(--ink3);margin-bottom:10px">机构类别分布（按获奖项目计，单位可重复）</div>
+          <div class="bars" id="c-cat"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">结构分析<em>STRUCTURE</em></div><div class="sec-a" id="hmnote"></div></div>
+      <div class="grid2">
+        <div class="panel pad">
+          <div style="font-size:12.5px;color:var(--ink3);margin-bottom:12px">类别 × 年度 项目数矩阵</div>
+          <table class="hm" id="c-heat"></table>
+        </div>
+        <div class="panel pad">
+          <div style="font-size:12.5px;color:var(--ink3);margin-bottom:8px">获奖最多的完成单位（TOP 20）</div>
+          <div id="c-top" style="max-height:376px;overflow:auto"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">主题标签<em>TOPICAL TAGS</em></div><div class="sec-a">自项目名称提取，点击进入检索</div></div>
+      <div class="panel pad"><div class="tags-cloud" id="c-tags"></div></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">观察<em>REMARKS</em></div></div>
+      <div class="ins" id="c-ins"></div>
+    </div>
+  </section>
+
+  <!-- 项目检索 -->
+  <section class="view" id="v-search">
+    <div class="sec">
+      <div class="tools">
+        <div class="big-q">
+          <span class="ic">⌕</span>
+          <input id="q" class="input" type="search" placeholder="输入关键词，多词用空格 / 逗号 / 顿号 / 分号 分隔，多个条件需同时满足" autocomplete="off">
+          <span class="clr" id="qclr">×</span>
+        </div>
+        <button class="btn" id="advBtn">高级检索</button>
+        <button class="btn pri" id="goBtn">检索</button>
+      </div>
+      <div class="adv" id="adv">
+        <div class="frow"><label>年度</label><div class="chips" id="f-year"></div></div>
+        <div class="frow"><label>获奖等级</label><div class="chips" id="f-grade"></div></div>
+        <div class="frow"><label>机构类别</label><div class="chips" id="f-cat"></div></div>
+        <div class="frow"><label>完成单位</label><div class="chips" id="f-org"></div></div>
+        <div class="frow"><label>字段范围</label><div class="chips" id="f-field"></div></div>
+        <div class="frow" style="align-items:center">
+          <label>排除词</label>
+          <div><input class="input" id="f-neg" style="width:100%;max-width:440px" placeholder="含这些词的项目不显示，同样支持多词与多种分隔符"></div>
+        </div>
+        <div class="fhint">检索规则：① 多个关键词以 <code>空格</code> <code>,</code> <code>，</code> <code>、</code> <code>;</code> <code>；</code> <code>|</code> <code>/</code> <code>+</code> 分隔均可，按「同时满足」匹配；② 全角/半角括号、书名号、空格自动忽略；③ 单位支持简称检索（如「工行」「建行」「招行」「国泰君安」）；④ 可跨年度、跨类别组合；⑤ 结果可用 <code>单位:</code> <code>人:</code> <code>年:</code> 前缀限定字段。</div>
+      </div>
+      <div class="resbar" id="resbar" style="margin-top:16px"></div>
+    </div>
+    <div class="panel tb-year">
+      <div class="tw" id="tw-search"></div>
+      <div class="tfoot" id="tf-search"><span></span><button class="btn sm" id="csvBtn">导出当前结果 CSV</button></div>
+    </div>
+    <div class="cards" id="cards-search"></div>
+    <div class="empty" id="empty-search" style="display:none"><b>没有匹配的项目</b>可减少关键词，或放宽年度、等级、类别条件后重试</div>
+  </section>
+
+  <!-- 年度名录 -->
+  <section class="view" id="v-year">
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">年度名录<em>YEARBOOK</em></div><div class="sec-a">按原名单序号排列，可横向滚动，表头与序号列固定</div></div>
+      <div class="tools">
+        <div class="chips" id="y-tabs"></div>
+        <div style="flex:1"></div>
+        <input class="input" id="y-q" type="search" placeholder="在当年度名单中筛选" style="width:240px">
+      </div>
+    </div>
+    <div class="panel tb-year">
+      <div class="tw" id="tw-year" style="max-height:calc(100vh - 190px)"></div>
+      <div class="tfoot"><span id="tf-year"></span><span style="color:var(--ink4)">表头随滚动固定</span></div>
+    </div>
+    <div class="cards" id="cards-year"></div>
+  </section>
+
+  <!-- 完成单位 -->
+  <section class="view" id="v-org">
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">完成单位<em>ORGANISATIONS</em></div><div class="sec-a">联合获奖单位已拆分计列；悬停查看历年获奖明细</div></div>
+      <div class="tools">
+        <input class="input" id="o-q" type="search" placeholder="按简称或全称检索，如「工行」「国泰君安」" style="flex:1 1 260px;max-width:360px">
+        <div class="chips" id="o-cats"></div>
+      </div>
+    </div>
+    <div class="panel tb-org">
+      <div class="tw" id="tw-org"></div>
+      <div class="tfoot"><span id="tf-org"></span><span style="color:var(--ink4)">共 <b id="o-total">462</b> 家</span></div>
+    </div>
+    <div class="cards" id="cards-org"></div>
+  </section>
+
+  <!-- 完成人 -->
+  <section class="view" id="v-ppl">
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">主要完成人<em>CONTRIBUTORS</em></div><div class="sec-a">同名同姓未做消歧，按姓名聚合</div></div>
+      <div class="tools">
+        <input class="input" id="p-q" type="search" placeholder="输入姓名" style="flex:1 1 220px;max-width:300px">
+        <div class="chips" id="p-sort"></div>
+      </div>
+    </div>
+    <div class="panel tb-ppl">
+      <div class="tw" id="tw-ppl"></div>
+      <div class="tfoot"><span id="tf-ppl"></span><span style="color:var(--ink4)">悬停姓名查看参与项目</span></div>
+    </div>
+    <div class="cards" id="cards-ppl"></div>
+  </section>
+
+  <!-- 说明 -->
+  <section class="view" id="v-about">
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">编制说明<em>METHOD &amp; SOURCES</em></div></div>
+      <div class="panel pad" style="font-size:13.5px;line-height:1.95;color:var(--ink2)">
+        <p><b style="color:var(--ink)">一、数据来源。</b>本索引依据 2023、2024、2025 年度《金融科技发展奖获奖项目名单》整理，逐条录入项目名称、完成单位、主要完成人与获奖等级，未做任何内容增删。三年合计 <b id="ab-n">844</b> 项。</p>
+        <p style="margin-top:10px"><b style="color:var(--ink)">二、解析方法。</b>原始名单为 PDF 表格，按表格框线还原行列坐标后逐格提取，再以「序号—等级」双校验核对记录完整性：各年度记录数与最大序号一致，等级计数与原文分档一致（2023 年 257 项、2024 年 290 项、2025 年 297 项），无空字段。</p>
+        <p style="margin-top:10px"><b style="color:var(--ink)">三、单位拆分与去重。</b>多家单位联合获奖的，按顿号拆分后各自计列（项目数因此存在一处重复计数，符合「参与度」口径）；同一主体的不同书写（如「上海浦东发展银行」与「上海浦东发展银行股份有限公司」）合并统计。简称优先采用行业通用称谓，无通用称谓的按去除「股份有限公司／有限责任公司／有限公司」后缀生成，全称在单位列表中完整呈现。</p>
+        <p style="margin-top:10px"><b style="color:var(--ink)">四、机构分类。</b>设 12 类：监管与金融基础设施、银行、理财子公司、证券、基金、期货、保险、保险资管、信托、消费金融／租赁、金融科技与 IT 服务、高校院所／协会／其他。分类依据完成单位主体性质判定；集团下属科技子公司按其自身性质归入科技类，不随母体归并。</p>
+        <p style="margin-top:10px"><b style="color:var(--ink)">五、检索口径。</b>项目检索默认在「项目名称 + 完成单位（含简称）+ 完成人」全域匹配，多关键词为「与」关系；括号、空格、标点在做匹配时统一归一化，故「云原生 核心」与「云原生、核心」「云原生/核心」等价。</p>
+        <p style="margin-top:10px"><b style="color:var(--ink)">六、已知局限。</b>① 同名完成人未消歧，人物维度仅供线索参考；② 机构类别为编者判定，边界个案（如金融控股平台、产业系科技公司）存在归类弹性；③ 2023、2024 年度「微创新奖」在原名单中独立编号，本索引以年份＋W 前缀区分，不与主序列混排。</p>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="sec-t">署名<em>COLOPHON</em></div></div>
+      <div class="panel pad" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
+        <div style="font-size:13px;color:var(--ink2);line-height:2">
+          <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:.12em;margin-bottom:6px">编 者　周红青</div>
+          数据整理与页面编制　2026 年 11 月<br>
+          内容以官方公示名单为准，如有出入以原文为准
+        </div>
+        <div class="sig"><img src="seal.jpg" alt="周红青印"><div class="t">周红青<br>2026.11</div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div class="colo">
+      <b>金融科技发展奖获奖项目索引</b><br>
+      2023—2025 年度 · 全量名录与跨年检索 · 编制 周红青
+    </div>
+    <div class="sig"><img src="seal.jpg" alt="周红青印"><div class="t">周红青<br>2026.11 · 杭州</div></div>
+  </div>
+</footer>
+
+<div class="pop" id="pop"></div>
+<div class="drawer" id="drawer"><div class="dmask"></div><div class="dpanel">
+  <div class="dh"><div><h3 id="dtitle"></h3><div class="s" id="dsub"></div></div><button class="dx" id="dclose">×</button></div>
+  <div class="db" id="dbody"></div>
+</div></div>
+<button class="top" id="top">↑</button>
+
+<script src="data.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

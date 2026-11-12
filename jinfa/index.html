@@ -256,8 +256,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 /* ---------- 图表 ---------- */
 .chart{width:100%;overflow:hidden}
 .bars{display:flex;flex-direction:column;gap:9px;margin-top:4px}
-.bar-row{display:grid;grid-template-columns:118px 1fr 46px;gap:10px;align-items:center;font-size:12px}
-.bar-row .lab{color:var(--ink2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row{display:grid;grid-template-columns:132px 1fr 46px;gap:10px;align-items:center;font-size:12px}
+.bar-row .lab{color:var(--ink2);text-align:right;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.32;word-break:break-word}
 .bar-track{height:18px;background:#f2f5f8;border-radius:3px;overflow:hidden;display:flex}
 .bar-track i{display:block;height:100%}
 .bar-row .val{color:var(--ink3);font-variant-numeric:tabular-nums}
@@ -337,6 +337,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   .kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid var(--line)}
   .nav-in{padding:0 12px;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .nav-in::-webkit-scrollbar{display:none}
+  .nav::after{content:"";position:absolute;right:0;top:0;bottom:1px;width:26px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff 70%);pointer-events:none}
   .tab{padding:0 11px;font-size:13px}
   .nav-sp,.qbox{display:none}
   .main{padding:18px 16px 60px}
@@ -345,7 +346,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   .cards{display:block}
   .frow{grid-template-columns:1fr;gap:4px}
   .frow>label{padding-top:0}
-  .bar-row{grid-template-columns:92px 1fr 40px}
+  .bar-row{grid-template-columns:116px 1fr 36px;gap:8px}
+  .bar-row .lab{font-size:11.5px}
   .foot-in{padding:22px 18px 28px}
   .dpanel{width:100%}
   .pop{max-width:calc(100vw - 24px)}

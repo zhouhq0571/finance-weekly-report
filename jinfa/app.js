@@ -327,7 +327,7 @@
     R.forEach(function (r) {
       var cs = catsOf(r);
       if (cs.indexOf('银行') >= 0) bank++;
-      if (cs.indexOf('金融科技与IT服务') >= 0) { tech++; r.units.forEach(function (u) { var m = orgMeta[u]; if (m && m.cat === '金融科技与IT服务') techOrgs[u] = 1; }); }
+      if (cs.indexOf('金融IT/科技公司') >= 0) { tech++; r.units.forEach(function (u) { var m = orgMeta[u]; if (m && m.cat === '金融IT/科技公司') techOrgs[u] = 1; }); }
       if (cs.indexOf('信托') >= 0) trustItems++;
       if (cs.indexOf('理财子公司') >= 0) wmItems++;
     });
@@ -337,7 +337,7 @@
       ['评审规模持续扩张', '获奖项目由 2023 年度 <em>' + n23 + '</em> 项增至 2025 年度 <em>' + n25 + '</em> 项，增幅 <em>' + ((n25 - n23) / n23 * 100).toFixed(1) + '%</em>。增量主要落在二等奖与三等奖，一等奖数量三年基本持平（18→19 项）。'],
       ['头部机构高度集中', '<em>' + ORGS[0].short + '</em> 以 <em>' + ORGS[0].n + '</em> 项居首；前 20 家单位合计参与 <em>' + top20 + '</em> 项，占全部项目的 <em>' + (top20 / R.length * 100).toFixed(1) + '%</em>。国有大行与全国性股份行构成第一梯队，且多以牵头单位身份出现。'],
       ['一等奖以上保持稀缺', '特等奖与一等奖三年合计 <em>' + first + '</em> 项，占比 <em>' + (first / R.length * 100).toFixed(1) + '%</em>。特等奖仅 2 项：2024 年度「多功能激光雕刻钞券制版系统研制」与 2025 年度「新一代核心银行系统项目」，分别指向货币印制工艺与银行核心系统两个方向。'],
-      ['银行主导，科技公司深度嵌入', '含银行类完成单位的项目 <em>' + bank + '</em> 项，占 <em>' + (bank / R.length * 100).toFixed(1) + '%</em>；金融科技与 IT 服务类主体 <em>' + Object.keys(techOrgs).length + '</em> 家，参与项目 <em>' + tech + '</em> 项。科技公司多以联合完成单位身份出现，「金融机构出题、科技公司交付」已是主流协作形态。']
+      ['银行主导，科技公司深度嵌入', '含银行类完成单位的项目 <em>' + bank + '</em> 项，占 <em>' + (bank / R.length * 100).toFixed(1) + '%</em>；金融IT／科技公司类主体 <em>' + Object.keys(techOrgs).length + '</em> 家，参与项目 <em>' + tech + '</em> 项。科技公司多以联合完成单位身份出现，「金融机构出题、科技公司交付」已是主流协作形态。']
     ];
     var wide = '<div class="ins-i wide"><b>结构性的空白：信托与理财子近乎缺席</b><span>三年名单中，信托公司仅 <em>' + trustN + '</em> 家上榜、合计 <em>' + trustItems + '</em> 个项目；理财子公司 <em>' + wmN + '</em> 家、<em>' + wmItems + '</em> 个项目。与之对照，银行类主体覆盖 <em>' + bank + '</em> 个项目、证券类 <em>' + R.filter(function (r) { return catsOf(r).indexOf('证券') >= 0; }).length + '</em> 个。资管与信托条线的科技投入规模并不小，但在这份名单上的能见度明显低于其资产体量，值得作为申报策略问题单独研究。</span></div>';
     $('#c-ins').innerHTML = items.map(function (i) {
@@ -528,7 +528,9 @@
       var list = ids.map(function (id) { return byId[id]; }).sort(function (a, b) { return b.y - a.y || GC[a.grade] - GC[b.grade]; });
       title = m.short;
       sub = m.full.replace(/ \/ /g, ' ／ ');
-      body = '<dl class="kv"><dt>机构类别</dt><dd>' + m.cat + '</dd><dt>获奖项目</dt><dd>' + list.length + ' 项</dd>' +
+      body = '<dl class="kv"><dt>机构类别</dt><dd>' + m.cat + '</dd>' +
+        (m.members && m.members.length ? '<dt>归并主体</dt><dd style="font-size:12.5px;color:var(--ink3)">含 ' + m.members.length + ' 个分支机构／下属单位：' + esc(m.members.join('、')) + '</dd>' : '') +
+        '<dt>获奖项目</dt><dd>' + list.length + ' 项</dd>' +
         '<dt>年度分布</dt><dd>' + m.years.map(function (y) { return y + ' 年 ' + list.filter(function (r) { return r.y === y; }).length + ' 项'; }).join('　') + '</dd>' +
         '<dt>最高等级</dt><dd>' + GS[m.best] + '</dd></dl>';
       body += '<div class="dlist">' + list.map(function (r) {

@@ -659,7 +659,6 @@
   function runQuery(v) {
     S.q = v; q.value = v;
     switchTab('search');
-    $('#adv').classList.add('on');
     doSearch();
   }
   if (gq) gq.addEventListener('keydown', function (e) { if (e.key === 'Enter') runQuery(this.value); });

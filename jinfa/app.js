@@ -111,7 +111,7 @@
   function fmt(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
   function tokenize(q) {
-    if (!q) return [];
+    if (!q) return { toks: [], fields: [] };
     var fieldHits = [], rest = [];
     var src = String(q).replace(/(单位|人|年度|年|等级|类别)\s*[:：]\s*([^\s,，、;；|/+]+)/g, function (m, k, v) {
       fieldHits.push({ k: k, v: N(v) }); return ' ';
@@ -122,6 +122,7 @@
   }
 
   function matchRecord(r, tk) {
+    if (!tk || !tk.toks) tk = { toks: [], fields: [] };
     for (var i = 0; i < tk.fields.length; i++) {
       var f = tk.fields[i], v = f.v;
       var hay = (f.k === '单位') ? r._uu : (f.k === '人') ? r._pp : (f.k === '等级') ? N(r.grade) : (f.k === '类别') ? N(catsOf(r).join('')) : String(r.y);

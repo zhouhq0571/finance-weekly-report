@@ -76,6 +76,7 @@
   R.forEach(function (r) {
     var us = r.units.map(function (u) { var m = orgMeta[u]; return m ? m.short : u; }).join(' ');
     r._t = tagsOf(r.title);
+    r._ta = TAGDEF.filter(function (t) { return t[1].test(r.title); }).map(function (t) { return t[0]; });
     r._n = N(r.title) + ' ' + N(r.units.join(' ')) + ' ' + N(us) + ' ' + N(r.people.join(' ')) + ' ' + N(r._t.join(' ')) + ' ' + r.y + ' ' + r.grade + ' ' + r.seq;
     r._tt = N(r.title); r._uu = N(r.units.join(' ')) + N(us); r._pp = N(r.people.join(' '));
     r._s = r.units.reduce(function (a, u) { var m = orgMeta[u]; return a + (m ? m.n : 1); }, 0);
@@ -229,10 +230,11 @@
     var max = Math.max.apply(null, data.map(function (d) { return d.t; })) * 1.12;
     var bw = (W - pl - pr) / ys.length, barW = Math.min(76, bw * 0.46);
     var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto">';
-    for (var i = 0; i <= 4; i++) {
-      var v = max / 4 * i, yy = H - pb - (H - pt - pb) * (v / max);
+    var step = Math.max(50, Math.round(max / 4 / 50) * 50);
+    for (var v = 0; v <= max; v += step) {
+      var yy = H - pb - (H - pt - pb) * (v / max);
       s += '<line x1="' + pl + '" y1="' + yy.toFixed(1) + '" x2="' + (W - pr) + '" y2="' + yy.toFixed(1) + '" stroke="#eef1f5"/>';
-      s += '<text x="' + (pl - 8) + '" y="' + (yy + 3.5).toFixed(1) + '" font-size="10" fill="#9aa5b4" text-anchor="end">' + Math.round(v) + '</text>';
+      s += '<text x="' + (pl - 8) + '" y="' + (yy + 3.5).toFixed(1) + '" font-size="10" fill="#9aa5b4" text-anchor="end">' + v + '</text>';
     }
     var cols = ['#8a6a1f', '#14527f', '#3f6178', '#6b7887', '#1a6b57'];
     data.forEach(function (d, i) {
@@ -292,7 +294,7 @@
   }
 
   function renderTop() {
-    var arr = ORGS.slice(0, 20);
+    var arr = ORGS.slice(0, 15);
     var max = arr[0].n;
     $('#c-top').innerHTML = '<div class="bars">' + arr.map(function (o, i) {
       return '<div class="bar-row" style="grid-template-columns:22px 108px 1fr 34px">' +
@@ -305,7 +307,7 @@
 
   function renderTags() {
     var o = {};
-    R.forEach(function (r) { r._t.forEach(function (t) { o[t] = (o[t] || 0) + 1; }); });
+    R.forEach(function (r) { r._ta.forEach(function (t) { o[t] = (o[t] || 0) + 1; }); });
     var arr = Object.keys(o).map(function (k) { return { t: k, n: o[k] }; }).sort(function (a, b) { return b.n - a.n; });
     var max = arr[0].n, min = arr[arr.length - 1].n;
     $('#c-tags').innerHTML = arr.map(function (a) {
@@ -317,25 +319,27 @@
   function renderIns() {
     var n23 = R.filter(function (r) { return r.y === 2023; }).length,
       n25 = R.filter(function (r) { return r.y === 2025; }).length;
-    var top = R.filter(function (r) { return r.grade === '特等奖' || r.grade === '一等奖'; });
     var first = R.filter(function (r) { return r.grade === '一等奖' || r.grade === '特等奖'; }).length;
-    var bank = 0, tech = 0, techOrgs = {};
+    var bank = 0, tech = 0, techOrgs = {}, trustN = 0, trustItems = 0, wmN = 0, wmItems = 0;
     R.forEach(function (r) {
       var cs = catsOf(r);
       if (cs.indexOf('银行') >= 0) bank++;
       if (cs.indexOf('金融科技与IT服务') >= 0) { tech++; r.units.forEach(function (u) { var m = orgMeta[u]; if (m && m.cat === '金融科技与IT服务') techOrgs[u] = 1; }); }
+      if (cs.indexOf('信托') >= 0) trustItems++;
+      if (cs.indexOf('理财子公司') >= 0) wmItems++;
     });
-    var techN = Object.keys(techOrgs).length;
-    var topOrg = ORGS[0];
+    ORGS.forEach(function (o) { if (o.cat === '信托') trustN++; if (o.cat === '理财子公司') wmN++; });
+    var top20 = ORGS.slice(0, 20).reduce(function (a, o) { return a + o.n; }, 0);
     var items = [
-      ['评审规模持续扩张', '获奖项目由 2023 年度 <em>' + n23 + '</em> 项增至 2025 年度 <em>' + n25 + '</em> 项，三年增幅 <em>' + ((n25 - n23) / n23 * 100).toFixed(1) + '%</em>；同口径下二、三等奖扩容最为明显，反映申报基数与评审容量的同步扩大。'],
-      ['头部机构高度集中', '<em>' + topOrg.short + '</em> 以 <em>' + topOrg.n + '</em> 项居首，前 20 家单位合计参与 <em>' + ORGS.slice(0, 20).reduce(function (a, o) { return a + o.n; }, 0) + '</em> 项，占全部项目的 <em>' + (ORGS.slice(0, 20).reduce(function (a, o) { return a + o.n; }, 0) / R.length * 100).toFixed(0) + '%</em> 以上，大行与全国性股份行的科技投入仍是获奖主力。'],
-      ['一等奖以上结构稳定', '三年特等奖与一等奖合计 <em>' + first + '</em> 项，占比 <em>' + (first / R.length * 100).toFixed(1) + '%</em>；特等奖仅 2024、2025 年度各 1 项，均落在核心系统与基础设施方向。'],
-      ['银行主导，科技公司深度参与', '含银行类完成单位的项目 <em>' + bank + '</em> 项，占 <em>' + (bank / R.length * 100).toFixed(0) + '%</em>；金融科技与 IT 服务类主体 <em>' + techN + '</em> 家，参与项目 <em>' + tech + '</em> 项，多以联合完成单位身份出现，说明「金融机构出题、科技公司交付」的协作模式已成常态。']
+      ['评审规模持续扩张', '获奖项目由 2023 年度 <em>' + n23 + '</em> 项增至 2025 年度 <em>' + n25 + '</em> 项，增幅 <em>' + ((n25 - n23) / n23 * 100).toFixed(1) + '%</em>。增量主要落在二等奖与三等奖，一等奖数量三年基本持平（18→19 项）。'],
+      ['头部机构高度集中', '<em>' + ORGS[0].short + '</em> 以 <em>' + ORGS[0].n + '</em> 项居首；前 20 家单位合计参与 <em>' + top20 + '</em> 项，占全部项目的 <em>' + (top20 / R.length * 100).toFixed(1) + '%</em>。国有大行与全国性股份行构成第一梯队，且多以牵头单位身份出现。'],
+      ['一等奖以上保持稀缺', '特等奖与一等奖三年合计 <em>' + first + '</em> 项，占比 <em>' + (first / R.length * 100).toFixed(1) + '%</em>。特等奖仅 2 项：2024 年度「多功能激光雕刻钞券制版系统研制」与 2025 年度「新一代核心银行系统项目」，分别指向货币印制工艺与银行核心系统两个方向。'],
+      ['银行主导，科技公司深度嵌入', '含银行类完成单位的项目 <em>' + bank + '</em> 项，占 <em>' + (bank / R.length * 100).toFixed(1) + '%</em>；金融科技与 IT 服务类主体 <em>' + Object.keys(techOrgs).length + '</em> 家，参与项目 <em>' + tech + '</em> 项。科技公司多以联合完成单位身份出现，「金融机构出题、科技公司交付」已是主流协作形态。']
     ];
+    var wide = '<div class="ins-i wide"><b>结构性的空白：信托与理财子近乎缺席</b><span>三年名单中，信托公司仅 <em>' + trustN + '</em> 家上榜、合计 <em>' + trustItems + '</em> 个项目；理财子公司 <em>' + wmN + '</em> 家、<em>' + wmItems + '</em> 个项目。与之对照，银行类主体覆盖 <em>' + bank + '</em> 个项目、证券类 <em>' + R.filter(function (r) { return catsOf(r).indexOf('证券') >= 0; }).length + '</em> 个。资管与信托条线的科技投入规模并不小，但在这份名单上的能见度明显低于其资产体量，值得作为申报策略问题单独研究。</span></div>';
     $('#c-ins').innerHTML = items.map(function (i) {
       return '<div class="ins-i"><b>' + i[0] + '</b><span>' + i[1] + '</span></div>';
-    }).join('');
+    }).join('') + wide;
   }
 
   /* ============ 6. 检索视图 ============ */

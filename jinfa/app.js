@@ -405,7 +405,8 @@
         o.full.split(' / ').forEach(function (f) { (orgIdx[f] || []).forEach(function (id) { if (byId[id].y === y) c++; }); });
         return '<span class="yr" style="' + (c ? '' : 'opacity:.32') + ';margin-right:3px">' + String(y).slice(2) + '<b style="font-weight:600">' + (c ? '·' + c : '') + '</b></span>';
       }).join('');
-      h += '<tr><td class="nowrap"><span class="ent" data-org="' + esc(o.full.split(' / ')[0]) + '">' + esc(o.short) + '</span></td>' +
+      h += '<tr><td class="nowrap"><span class="ent" data-org="' + esc(o.full.split(' / ')[0]) + '">' + esc(o.short) + '</span>' +
+        (o.members && o.members.length ? '<span class="mk" title="含 ' + o.members.length + ' 个分支机构／下属单位">并' + o.members.length + '</span>' : '') + '</td>' +
         '<td class="wrap" style="font-size:12px;color:var(--ink3);line-height:1.5">' + esc(o.full.replace(/ \/ /g, ' ／ ')) + '</td>' +
         '<td class="nowrap"><span style="font-size:11.5px;color:#4c5d70">' + o.cat + '</span></td>' +
         '<td class="num"><b>' + o.n + '</b></td>' +

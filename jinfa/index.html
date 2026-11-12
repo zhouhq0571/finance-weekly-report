@@ -92,11 +92,11 @@ h1 .thin{font-weight:400;color:#c6d7e6}
 .nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);
   backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
 .nav-in{max-width:1240px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:4px;height:var(--navh)}
-.tab{position:relative;padding:0 15px;height:var(--navh);display:inline-flex;align-items:center;
-  font-size:13.5px;color:var(--ink2);white-space:nowrap;letter-spacing:.02em}
+.tab{position:relative;padding:0 16px;height:var(--navh);display:inline-flex;align-items:center;
+  font-size:14px;font-weight:500;color:#46586c;white-space:nowrap;letter-spacing:.02em;transition:color .15s}
 .tab:hover{color:var(--brand)}
-.tab.on{color:var(--brand);font-weight:600}
-.tab.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--brand)}
+.tab.on{color:var(--brand);font-weight:700;background:linear-gradient(180deg,#edf4fa 0%,rgba(237,244,250,0) 88%)}
+.tab.on::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:3px;background:var(--brand);border-radius:2px 2px 0 0}
 .nav-sp{flex:1}
 .qbox{position:relative;display:flex;align-items:center}
 .qbox input{
@@ -264,8 +264,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink3);margin-top:12px}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .hm{width:100%;border-collapse:separate;border-spacing:3px;font-size:11.5px}
-.hm th{font-weight:500;color:var(--ink3);font-size:11px;padding:3px 4px;text-align:center;background:none;position:static;letter-spacing:.02em;border-bottom:none}
-.hm td{padding:0;text-align:center;height:30px;border-radius:3px;font-size:11.5px;border:none}
+.hm th{font-weight:500;color:var(--ink3);font-size:11px;padding:7px 4px;text-align:center;background:none;position:static;letter-spacing:.02em;border-bottom:none}
+.hm td{padding:0;text-align:center;height:38px;border-radius:3px;font-size:12px;border:none}
 .hm tbody tr:hover{background:none}
 .tags-cloud{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;padding:4px 0}
 .tg{display:inline-flex;align-items:baseline;gap:5px;padding:4px 11px;border-radius:5px;
@@ -375,10 +375,6 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
           <span>编制 <em>周红青</em></span>
           <span>更新 <em id="mhD">2026-11-12</em></span>
         </div>
-      </div>
-      <div class="seal-box">
-        <img src="seal.jpg" alt="周红青印">
-        <div class="cap">印</div>
       </div>
     </div>
   </div>
@@ -557,17 +553,6 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
         <p style="margin-top:10px"><b style="color:var(--ink)">四、机构分类。</b>设 12 类：监管与金融基础设施、银行、理财子公司、证券、基金、期货、保险、保险资管、信托、消费金融／租赁、金融科技与 IT 服务、高校院所／协会／其他。分类依据完成单位主体性质判定；集团下属科技子公司按其自身性质归入科技类，不随母体归并。</p>
         <p style="margin-top:10px"><b style="color:var(--ink)">五、检索口径。</b>项目检索默认在「项目名称 + 完成单位（含简称）+ 完成人」全域匹配，多关键词为「与」关系；括号、空格、标点在做匹配时统一归一化，故「云原生 核心」与「云原生、核心」「云原生/核心」等价。</p>
         <p style="margin-top:10px"><b style="color:var(--ink)">六、已知局限。</b>① 同名完成人未消歧，人物维度仅供线索参考；② 机构类别为编者判定，边界个案（如金融控股平台、产业系科技公司）存在归类弹性；③ 2023、2024 年度「微创新奖」在原名单中独立编号，本索引以年份＋W 前缀区分，不与主序列混排。</p>
-      </div>
-    </div>
-    <div class="sec">
-      <div class="sec-h"><div class="sec-t">署名<em>COLOPHON</em></div></div>
-      <div class="panel pad" style="display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap">
-        <div style="font-size:13px;color:var(--ink2);line-height:2">
-          <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:.12em;margin-bottom:6px">编 者　周红青</div>
-          数据整理与页面编制　2026 年 11 月<br>
-          内容以官方公示名单为准，如有出入以原文为准
-        </div>
-        <div class="sig"><img src="seal.jpg" alt="周红青印"><div class="t">周红青<br>2026.11</div></div>
       </div>
     </div>
   </section>

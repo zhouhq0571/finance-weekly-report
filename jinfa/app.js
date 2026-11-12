@@ -297,7 +297,7 @@
   }
 
   function renderTop() {
-    var arr = ORGS.slice(0, 15);
+    var arr = ORGS.slice(0, 20);
     var max = arr[0].n;
     $('#c-top').innerHTML = '<div class="bars">' + arr.map(function (o, i) {
       return '<div class="bar-row" style="grid-template-columns:22px 108px 1fr 34px">' +

@@ -647,6 +647,13 @@
     });
   }
 
+  function syncChips() {
+    var ys = [2023, 2024, 2025];
+    $$('#f-year .chip').forEach(function (c, i) { c.classList.toggle('on', S.year.indexOf(ys[i]) >= 0); });
+    $$('#f-grade .chip').forEach(function (c, i) { c.classList.toggle('on', S.grade.indexOf(GS[i]) >= 0); });
+    $$('#f-cat .chip').forEach(function (c, i) { c.classList.toggle('on', S.cat.indexOf(CATS[i]) >= 0); });
+  }
+
   /* ============ 13. 导航与联动 ============ */
   function switchTab(v, skip) {
     S.tab = v;
@@ -746,6 +753,7 @@
     renderVolume(); renderCat(); renderHeat(); renderTop(); renderTags(); renderIns();
     buildFilters(); buildYearTabs(); buildOrgCats();
     readURL();
+    syncChips();
     doSearch(); renderYear(); renderOrg(); renderPpl();
     switchTab(S.tab, true);
   }

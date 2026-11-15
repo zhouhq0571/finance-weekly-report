@@ -1,15 +1,26 @@
 {
- "builtAt": "2026-11-02T10:14:01",
+ "builtAt": "2026-11-15T23:46:39",
  "issues": [
   {
    "id": "current",
-   "label": "本期（2026年10月17日-11月2日）",
+   "label": "本期（2026年11月2日-11月16日）",
    "shard": "idx_current.json",
    "htmlUrl": "index.html",
    "pdfUrl": null,
    "level": "html",
-   "items": 4326,
+   "items": 8235,
    "current": true,
+   "aliasOf": null
+  },
+  {
+   "id": "1102-1116",
+   "label": "2026年11月2日-11月16日",
+   "shard": "idx_1102-1116.json",
+   "htmlUrl": "archive/files/2026-11-02_11-16.html",
+   "pdfUrl": "https://www.kdocs.cn/l/cjLfHhcQoHhd",
+   "level": "html",
+   "items": 8235,
+   "current": false,
    "aliasOf": null
   },
   {

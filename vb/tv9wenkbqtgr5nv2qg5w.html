@@ -15,6 +15,7 @@
   --accent:#0b5cad; --accent-soft:#e9f2fc; --accent-ink:#0a4f96;
   --hs:#0b6e4f; --hs-soft:#e6f4ee;
   --cp:#b45309; --cp-soft:#fdf2e3;
+  --nt:#1d4ed8; --nt-soft:#e0e7ff;
   --gold:#b78900; --silver:#7c8698; --bronze:#a86a32;
   --shadow:0 1px 2px rgba(16,30,54,.05),0 4px 16px rgba(16,30,54,.06);
   --radius:12px;
@@ -90,6 +91,7 @@ a:hover{text-decoration:underline}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .chip.on.hs{background:var(--hs);border-color:var(--hs)}
 .chip.on.cp{background:var(--cp);border-color:var(--cp)}
+.chip.on.nt{background:var(--nt);border-color:var(--nt)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
 .seg button{border:none;background:#fff;padding:7px 13px;font-size:12px;font-weight:600;color:var(--ink2);cursor:pointer}
 .seg button.on{background:var(--accent-soft);color:var(--accent-ink)}
@@ -126,6 +128,7 @@ tr.pin-sep td{background:#f4f7fb;font-size:11px;color:var(--ink3);font-weight:60
 .tag{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
 .tag.hs{background:var(--hs-soft);color:var(--hs)}
 .tag.cp{background:var(--cp-soft);color:var(--cp)}
+.tag.nt{background:var(--nt-soft);color:var(--nt)}
 .amt{font-weight:700;text-align:right;white-space:nowrap}
 .amt small{font-weight:400;color:var(--ink3);font-size:11px}
 .cnt-n{color:var(--ink2);white-space:nowrap;text-align:right}
@@ -240,7 +243,7 @@ body.host .tabs{position:static;top:auto}
 }
 </style>
 </head>
-<body data-payload-sha="13a1029ee6a1a312b3a40b94635c161c92ab247710da06678a7e9c1958576c33">
+<body data-payload-sha="4c2b09225616e85d85002666155b028c61317827e97e59b161b572a040012dd3">
 <div class="tip" id="tip"></div>
 
 <!-- 加密门禁（仅外网加密版显示；本地明文版自动跳过） -->
@@ -298,6 +301,7 @@ body.host .tabs{position:static;top:auto}
               <button class="chip on" data-g="">全部</button>
               <button class="chip hs" data-g="恒生系">恒生系</button>
               <button class="chip cp" data-g="应用软件竞品">应用软件竞品</button>
+              <button class="chip nt" data-g="南天系">南天系</button>
             </div>
             <div class="seg" id="sortSeg">
               <button class="on" data-s="a">按金额</button>
@@ -326,6 +330,7 @@ body.host .tabs{position:static;top:auto}
               <button class="chip on" data-g="">全部</button>
               <button class="chip hs" data-g="恒生系">恒生系</button>
               <button class="chip cp" data-g="应用软件竞品">应用软件竞品</button>
+              <button class="chip nt" data-g="南天系">南天系</button>
             </div>
             <div class="seg" id="sortSeg2">
               <button class="on" data-s="a">按金额</button>
@@ -364,8 +369,8 @@ body.host .tabs{position:static;top:auto}
 <script>
 /* ================= 数据挂载点（构建脚本替换） ================= */
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/zhouhq0571/finance-weekly-report@main/vb/';
-const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-13a1029ee6.bin"};
-const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-13a1029ee6.bin"};
+const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-4c2b092256.bin"};
+const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-4c2b092256.bin"};
 
 /* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
@@ -395,6 +400,7 @@ let OV = null, DET = null, DETMAP = {};
 function tagHtml(g){
   if(g === '恒生系') return '<span class="tag hs">恒生系</span>';
   if(g === '应用软件竞品') return '<span class="tag cp">竞品</span>';
+  if(g === '南天系') return '<span class="tag nt">南天系</span>';
   return '<span style="color:var(--ink3);font-size:11.5px">—</span>';
 }
 

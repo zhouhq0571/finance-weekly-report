@@ -134,9 +134,9 @@ tr.pin-sep td{background:#f4f7fb;font-size:11px;color:var(--ink3);font-weight:60
 /* 分组过滤态冗余的走势列：窄屏隐藏保阅读体验（周老师 11-06 裁定） */
 @media (max-width:900px){.cspk{display:none}}
 
-/* ---------- 明细分栏墙（桌面全量浏览：每栏30家，一栏一屏看全，不用滚屏） ---------- */
+/* ---------- 明细分栏墙（桌面全量浏览：每栏25家——2026-11-15周老师钦定改25确保显示齐全，原30家被视口高度截断） ---------- */
 .detwall{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;padding:14px 16px}
-.detcol{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;overflow:auto;align-self:start;max-height:calc(100vh - 170px)}
+.detcol{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;overflow:auto;align-self:start}  /* 2026-11-15 去max-height截断：栏自然高=每栏25家必显示齐全（原max-height:calc(100vh-170px)致第25-30家被吃） */
 .detcol-hd{display:flex;justify-content:space-between;padding:6px 12px 5px;font-size:11px;color:var(--ink3);border-bottom:1px solid var(--line2);background:#f4f7fb;position:sticky;top:0;z-index:2}
 .detrow{display:flex;align-items:baseline;gap:7px;padding:2px 12px;cursor:pointer;line-height:1.35;font-size:12px}
 .detrow:hover{background:#eef5fd}
@@ -717,7 +717,7 @@ function detFiltered(){
   vs.sort((a,b) => detState.s === 'c' ? (b.c-a.c) || (b.a-a.a) : (b.a-a.a) || (b.c-a.c));
   return vs;
 }
-/* 明细双形态：无过滤=分栏墙（每栏30家，一栏一屏看全）；有搜索/分组过滤=表格（独立滚动区+固定表头+分块加载） */
+/* 明细双形态：无过滤=分栏墙（每栏25家，栏自然高显示齐全）；有搜索/分组过滤=表格（独立滚动区+固定表头+分块加载） */
 function renderDet(reset){
   const filtered = !!(detState.q || detState.g);
   const vs = detFiltered();
@@ -800,7 +800,7 @@ function renderDet(reset){
 }
 function detWallHtml(vs){
   if(!vs.length) return '<div class="empty" style="grid-column:1/-1">无匹配厂商</div>';
-  const PER = 30, cols = [];
+  const PER = 25, cols = [];  // 2026-11-15 周老师钦定：30家在视口高度约束下显示不全，改25家确保每栏齐全
   for(let i = 0; i < vs.length; i += PER) cols.push(vs.slice(i, i + PER));
   return cols.map((col, ci) => `
     <div class="detcol">

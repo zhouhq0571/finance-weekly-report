@@ -489,8 +489,24 @@ async function tryUnlock(pwd){
 }
 
 /* gzip 解压（载荷分离版：数据先压缩再加密，体积约为原 1/8；v2 起裸二进制传输，无 base64） */
+/* 11-16：CDN 单源卡死根因修复——逐源超时（默认 12s）+ 同源降级，全部失败才抛错 */
+async function fetchFirstBytes(urls, timeoutMs){
+  let lastErr = null;
+  for(const u of urls){
+    try{
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), timeoutMs || 12000);
+      const r = await fetch(u, {cache:'no-cache', signal: ctl.signal});
+      clearTimeout(t);
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return new Uint8Array(await r.arrayBuffer());
+    }catch(e){ lastErr = e; }
+  }
+  throw lastErr || new Error('all sources failed');
+}
 async function fetchPayloadBuf(g){
-  const buf = new Uint8Array(await (await fetch(CDN_BASE + g.payload, {cache:'no-cache'})).arrayBuffer());
+  const urls = [CDN_BASE + g.payload, g.payload];   // CDN 优先，同源（github.io）兜底
+  const buf = await fetchFirstBytes(urls);
   if(!g.enc) return buf;                       // open 档：裸 gzip 流
   return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, g._dekKey, buf.slice(12)));
 }
@@ -939,6 +955,9 @@ window.addEventListener('resize', () => { clearTimeout(__fitT); __fitT = setTime
 // 标签页等可点控件全部离开悬停区（11-06 周老师抓包"标签页 90% 点不中"根因）
 try{ if(window.self !== window.top) document.body.classList.add('host'); }catch(e){}
 /* 免密明文版入口：open 档下任何人直接看，但 flag=closed 仍可即时收回（11-06 周老师三问落地） */
+/* 11-16：加载期给可见提示 + 失败可重试（此前白屏无超时，CDN 一卡就是"半天打不开"） */
+const GATE_LOADING_HTML = '<div class="gate-card"><div class="gico">📊</div><h2>金融 IT 厂商中标看板</h2><div class="gsub">数据加载中…（约 1.2MB，首次打开需几秒）</div></div>';
+const GATE_RETRY_HTML = '<div class="gate-card"><div class="gico">⚠️</div><h2>数据加载失败</h2><div class="gsub">网络波动，看板数据未能载入</div><button class="gbtn" id="gRetry">重 试</button></div>';
 async function plainEntry(){
   try{
     const r = await fetch('flag.json', {cache:'no-store'});
@@ -951,7 +970,20 @@ async function plainEntry(){
     }
   }catch(e){ /* 开关不可达时放行（明文版无密可保，不放行会影响演示） */ }
   // 本地侧栏版=单文件内联明文数据（无 payload 文件）；外网版=载荷分离
-  boot(BLOB.payload ? await loadPayload(BLOB) : BLOB);
+  if(!BLOB.payload){ boot(BLOB); return; }
+  const load = async () => {
+    try{
+      const data = await loadPayload(BLOB);
+      gateHide();
+      boot(data);
+    }catch(e){
+      gateShow(GATE_RETRY_HTML);
+      const rb = $('#gRetry');
+      if(rb) rb.onclick = () => { gateShow(GATE_LOADING_HTML); load(); };
+    }
+  };
+  gateShow(GATE_LOADING_HTML);
+  await load();
 }
 if(BLOB.enc){
   gateBoot();

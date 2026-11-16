@@ -610,7 +610,8 @@ function boot(data){
 
 /* ================= 元信息 ================= */
 function renderMeta(){
-  const m = (DET && DET.meta) || {};   // 11-16：det 后台懒加载，首屏 meta 以 ov.meta 为准
+  // 11-16：det 后台懒加载——首屏 meta 以 ov.meta（构建期已并入 det.meta 实值）为准，det 就绪后同值
+  const m = Object.assign({}, OV.meta || {}, (DET && DET.meta) || {});
   $('#mRange').textContent = m.range || '—';
   $('#mPeriods').textContent = (OV.periods||[]).length + ' 期';
   $('#mBuilt').textContent = (m.built||'').replace(' ', ' · ') || '—';

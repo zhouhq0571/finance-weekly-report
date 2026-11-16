@@ -1,5 +1,5 @@
 {
- "builtAt": "2026-11-16T03:06:10",
+ "builtAt": "2026-11-17T01:08:45",
  "issues": [
   {
    "id": "current",
@@ -8,7 +8,7 @@
    "htmlUrl": "index.html",
    "pdfUrl": null,
    "level": "html",
-   "items": 7321,
+   "items": 7248,
    "current": true,
    "aliasOf": null
   },
@@ -17,9 +17,9 @@
    "label": "2026年11月2日-11月16日",
    "shard": "idx_1102-1116.json",
    "htmlUrl": "archive/files/2026-11-02_11-16.html",
-   "pdfUrl": "https://www.kdocs.cn/l/cjLfHhcQoHhd",
+   "pdfUrl": "https://www.kdocs.cn/l/ccuADFYkIzat",
    "level": "html",
-   "items": 7321,
+   "items": 7248,
    "current": false,
    "aliasOf": null
   },

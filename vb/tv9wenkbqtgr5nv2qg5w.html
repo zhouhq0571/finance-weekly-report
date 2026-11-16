@@ -610,7 +610,7 @@ function boot(data){
 
 /* ================= 元信息 ================= */
 function renderMeta(){
-  const m = DET.meta || {};
+  const m = (DET && DET.meta) || {};   // 11-16：det 后台懒加载，首屏 meta 以 ov.meta 为准
   $('#mRange').textContent = m.range || '—';
   $('#mPeriods').textContent = (OV.periods||[]).length + ' 期';
   $('#mBuilt').textContent = (m.built||'').replace(' ', ' · ') || '—';

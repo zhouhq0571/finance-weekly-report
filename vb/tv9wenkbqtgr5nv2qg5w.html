@@ -243,7 +243,7 @@ body.host .tabs{position:static;top:auto}
 }
 </style>
 </head>
-<body data-payload-sha="7df2543b046d9ab30f987eb5397fc20dc251582cd4d0594d68b3ca1efe9ce52a">
+<body data-payload-sha="0dc5846d8769e315fc3caa442fd1a3169cd77d1c5211179cf72d9a0897b61f38">
 <div class="tip" id="tip"></div>
 
 <!-- 加密门禁（仅外网加密版显示；本地明文版自动跳过） -->
@@ -369,8 +369,8 @@ body.host .tabs{position:static;top:auto}
 <script>
 /* ================= 数据挂载点（构建脚本替换） ================= */
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/zhouhq0571/finance-weekly-report@main/vb/';
-const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-7df2543b04-enc.bin"};
-const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"payload":"payload-v2-7df2543b04-enc.bin"};
+const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"ov":"payload-v3-0dc5846d87-ov-enc.bin","det":"payload-v3-0dc5846d87-det-enc.bin"};
+const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"ov":"payload-v3-0dc5846d87-ov-enc.bin","det":"payload-v3-0dc5846d87-det-enc.bin"};
 
 /* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
@@ -425,13 +425,14 @@ async function gateBoot(){
     const g = JSON.parse(localStorage.getItem(GATE_GRACE_KEY) || 'null');
     if(g && g.dek && (Date.now() - g.t) < GATE_GRACE_MS){
       GATE._dekKey = await crypto.subtle.importKey('raw', b64d(g.dek), 'AES-GCM', false, ['decrypt']);
-      const gz = await fetchPayloadBuf(GATE);
-      const data = JSON.parse(new TextDecoder().decode(await gunzip(gz)));
-      gateHide(); boot(data);
+      const ov = await loadPart('ov');
+      gateHide(); boot({ov});
+      ensureDet();                       // 明细后台静默补
       return;
     }
     localStorage.removeItem(GATE_GRACE_KEY);
   }catch(e){ /* 免密恢复失败按密码常态，安全性不降 */ }
+  prefetchPayloads();                    // 输密码期间并行预取载荷
   gateLock();
 }
 
@@ -476,11 +477,10 @@ async function tryUnlock(pwd){
     const dekKey = await crypto.subtle.importKey('raw', dek, 'AES-GCM', false, ['decrypt']);
     GATE._dekKey = dekKey;
     btn.textContent = '下载数据…';
-    const gz = await fetchPayloadBuf(GATE);
-    btn.textContent = '解密渲染中…';
-    const data = JSON.parse(new TextDecoder().decode(await gunzip(gz)));
+    const ov = await loadPart('ov');     // 密码门期间已预取，此处通常秒回
     gateHide();
-    boot(data);
+    boot({ov});
+    ensureDet();                         // 明细后台静默补
   }catch(e){
     err.textContent = '密码不正确，请重试';
     const card = $('#gCard'); card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
@@ -489,14 +489,16 @@ async function tryUnlock(pwd){
 }
 
 /* gzip 解压（载荷分离版：数据先压缩再加密，体积约为原 1/8；v2 起裸二进制传输，无 base64） */
-/* 11-16：CDN 单源卡死根因修复——逐源超时（默认 12s）+ 同源降级，全部失败才抛错 */
+/* 11-16：CDN 单源卡死根因修复——逐源超时（默认 12s）+ 同源降级，全部失败才抛错；
+   11-16 二阶提速：载荷内容寻址（文件名含数据指纹），形态不变则字节不变 → 允许浏览器缓存，
+   不再 no-cache 强制回源；数据更新=换文件名，天然无陈旧问题 */
 async function fetchFirstBytes(urls, timeoutMs){
   let lastErr = null;
   for(const u of urls){
     try{
       const ctl = new AbortController();
       const t = setTimeout(() => ctl.abort(), timeoutMs || 12000);
-      const r = await fetch(u, {cache:'no-cache', signal: ctl.signal});
+      const r = await fetch(u, {signal: ctl.signal});
       clearTimeout(t);
       if(!r.ok) throw new Error('HTTP ' + r.status);
       return new Uint8Array(await r.arrayBuffer());
@@ -504,11 +506,30 @@ async function fetchFirstBytes(urls, timeoutMs){
   }
   throw lastErr || new Error('all sources failed');
 }
-async function fetchPayloadBuf(g){
-  const urls = [CDN_BASE + g.payload, g.payload];   // CDN 优先，同源（github.io）兜底
-  const buf = await fetchFirstBytes(urls);
-  if(!g.enc) return buf;                       // open 档：裸 gzip 流
-  return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, g._dekKey, buf.slice(12)));
+async function decryptBuf(buf){
+  if(!GATE.enc) return buf;                       // open 档：裸 gzip 流
+  return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM', iv:buf.slice(0,12)}, GATE._dekKey, buf.slice(12)));
+}
+/* 密码门展示期间即预取两段载荷密文（密文本就公开托管，早取不泄密），
+   用户输密码的 2~5 秒与 1.1MB 传输并行，解锁后只剩 PBKDF2+解密+渲染 */
+let __pre = {};
+function prefetchPayloads(){
+  if(!GATE || !GATE.ov || __pre.__started) return;
+  __pre.__started = true;
+  for(const k of ['ov','det']){
+    __pre[k] = fetchFirstBytes([CDN_BASE + GATE[k], GATE[k]]).catch(e => { __pre[k] = null; throw e; });
+  }
+}
+/* 11-16 二阶提速：ov（概览~60KB）与 det（明细~1.1MB）分载荷——首屏只取 ov，det 后台静默补 */
+async function loadPart(key){
+  const name = GATE[key];
+  const p = __pre[key]; __pre[key] = null;
+  const buf = p ? await p : await fetchFirstBytes([CDN_BASE + name, name]);
+  const gz = await decryptBuf(buf);
+  return JSON.parse(new TextDecoder().decode(await gunzip(gz)));
+}
+async function loadPayload(g){   // 兼容旧调用形态（单载荷），现仅本地内联版不会走到
+  return loadPart('ov');
 }
 async function loadPayload(g){
   const gz = await fetchPayloadBuf(g);
@@ -523,8 +544,10 @@ async function gunzip(u8){
 
 
 /* ================= 启动 ================= */
-function boot(data){
-  OV = data.ov; DET = data.det;
+/* 11-16 二阶提速：ov 先行首屏，det 后台静默补；本地侧栏版=全量内联（data.det 随 BLOB 直达） */
+let OVMAP = {}, detPendingBind = false;
+function setDet(det){
+  DET = det;
   DETMAP = {}; (DET.vendors||[]).forEach(v => DETMAP[v.n] = v);
   // 各厂商"各期披露中标金额"序列：由明细条目（amt+期序 pi）实时聚合——
   // 11-06 周老师裁定：火花线/走势列画金额走势（旧版误用次数序列，已纠正）；
@@ -542,8 +565,46 @@ function boot(data){
     });
     v.ap = ap; v.cp = cp;
   });
+  const nz = arr => (arr||[]).filter(v => !(v.c === 0 && v.a === 0)).length;
+  const el = $('#cDet'); if(el) el.textContent = nz(DET.vendors) + ' 家';
+}
+let __detP = null;
+function ensureDet(){
+  if(DET) return Promise.resolve(DET);
+  if(__detP) return __detP;
+  __detP = (async () => {
+    const det = await loadPart('det');
+    setDet(det);
+    if(detPendingBind){ detPendingBind = false; bindDet(); }
+    return det;
+  })();
+  __detP.catch(() => { __detP = null; });
+  return __detP;
+}
+function showDetLoading(){
+  const wall = $('#detWall'); if(!wall) return;
+  wall.style.display = '';
+  wall.innerHTML = '<div class="empty" style="grid-column:1/-1">厂商明细数据加载中…（约 1MB，数秒内自动就绪，可先浏览概览）</div>';
+}
+function showDetRetry(){
+  const wall = $('#detWall'); if(!wall) return;
+  wall.style.display = '';
+  wall.innerHTML = '<div class="empty" style="grid-column:1/-1">明细数据加载失败 <button class="btn" id="detRetryBtn" style="margin-left:8px">重 试</button></div>';
+  const b = $('#detRetryBtn');
+  if(b) b.onclick = () => { showDetLoading(); ensureDet().catch(showDetRetry); };
+}
+function boot(data){
+  OV = data.ov;
+  OVMAP = {}; (OV.vendors||[]).forEach(v => OVMAP[v.n] = v);
+  if(data.det){ setDet(data.det); }
   $('#app').style.display = '';
-  renderMeta(); renderChart(); bindTabs(); bindOv(); bindDet(); bindDrawer(); bindCsv();
+  renderMeta(); renderChart(); bindTabs(); bindOv(); bindDrawer(); bindCsv();
+  if(data.det){ bindDet(); }
+  else{
+    detPendingBind = true;
+    showDetLoading();
+    ensureDet().catch(showDetRetry);
+  }
   window.__VB_OK = true;
 }
 
@@ -576,7 +637,7 @@ function renderMeta(){
   }
   const nz = arr => (arr||[]).filter(v => !(v.c === 0 && v.a === 0)).length;
   $('#cOv').textContent = nz(OV.vendors) + ' 家';
-  $('#cDet').textContent = nz(DET.vendors) + ' 家';
+  $('#cDet').textContent = DET ? nz(DET.vendors) + ' 家' : '载入中…';   // 11-16：det 后台补，先占位
 }
 
 /* ================= 趋势图（双纵轴：左轴全市场金额/右轴恒生系金额 + 柱顶数字标签） ================= */
@@ -667,17 +728,17 @@ document.addEventListener('mousemove', e => {
     if(!(e.target.closest && e.target.closest('#trendSvg'))) tip.style.opacity = 0;
     return;
   }
-  const v = DETMAP[svg.dataset.vn]; if(!v) return;
+  const v = DETMAP[svg.dataset.vn] || OVMAP[svg.dataset.vn]; if(!v) return;
   const r = svg.getBoundingClientRect(); if(!r.width) return;
   const ps = OV.periods || [], nP = ps.length || 1;
   let i = Math.round((e.clientX - r.left) / r.width * (nP - 1));
   i = Math.max(0, Math.min(nP - 1, i));
-  tip.innerHTML = `${esc(svg.dataset.vn)} · ${esc(ps[i] || '')}<br>金额 <b>${fmtWan((v.ap || [])[i] || 0)}</b> · 次数 <b>${(v.cp || [])[i] || 0}</b>`;
+  tip.innerHTML = `${esc(svg.dataset.vn)} · ${esc(ps[i] || '')}<br>金额 <b>${fmtWan((v.ap || [])[i] || 0)}</b> · 次数 <b>${((v.cp || v.p) || [])[i] || 0}</b>`;
   tip.style.opacity = 1;
   tip.style.left = Math.min(e.clientX + 12, innerWidth - 270) + 'px';
   tip.style.top = (e.clientY + 14) + 'px';
 });
-function amtSpark(n){ return sparkSvg((DETMAP[n]?.ap) || [], n); }
+function amtSpark(n){ const v = OVMAP[n]; return sparkSvg((v && v.ap) || [], n); }
 /* 趋势列联动排序指标：按金额→披露金额走势；按次数→中标次数走势（11-06 周老师二次裁定） */
 function trendSpark(v, s){ return s === 'c' ? sparkSvg(v.cp || v.p || [], v.n) : amtSpark(v.n); }
 function trendHead(s){ return s === 'c' ? '各期趋势（中标次数）' : '各期趋势（披露中标金额）'; }
@@ -688,7 +749,7 @@ function renderOv(){
   // 竞品视图冗余纳入恒生电子，便于竞对比对（11-06 周老师裁定）
   if(ovState.g) vs = vs.filter(v => ovState.g === '应用软件竞品'
     ? (v.g === '应用软件竞品' || v.n === '恒生电子') : v.g === ovState.g);
-  if(ovState.q) vs = vs.filter(v => v.n.toLowerCase().includes(ovState.q) || (DETMAP[v.n]?.full||'').toLowerCase().includes(ovState.q));
+  if(ovState.q) vs = vs.filter(v => v.n.toLowerCase().includes(ovState.q) || (OVMAP[v.n]?.full||'').toLowerCase().includes(ovState.q));
   vs.sort((a,b) => ovState.s === 'c' ? (b.c-a.c) || (b.a-a.a) : (b.a-a.a) || (b.c-a.c));
   const hd = $('#ovSparkHead'); if(hd) hd.textContent = trendHead(ovState.s);
   const tb = $('#tbOv tbody');
@@ -700,7 +761,7 @@ function renderOv(){
     return `
     <tr class="clickable ${isP(v.n) ? 'pin-row' : ''}" data-n="${esc(v.n)}">
       <td><span class="rk ${i<3?'r'+(i+1):''}">${i+1}</span></td>
-      <td><div class="vc"><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(DETMAP[v.n]?.full || '')}</span>${pinIcon(v.n)}</div></td>
+      <td><div class="vc"><span class="vname">${esc(v.n)}</span><span class="vfull">${esc(OVMAP[v.n]?.full || '')}</span>${pinIcon(v.n)}</div></td>
       <td>${tagHtml(v.g)}</td>
       <td>${trendSpark(v, ovState.s)}</td>
       <td class="cnt-n">${v.c}</td>
@@ -744,6 +805,7 @@ function detFiltered(){
 }
 /* 明细双形态：无过滤=分栏墙（每栏25家，栏自然高显示齐全）；有搜索/分组过滤=表格（独立滚动区+固定表头+分块加载） */
 function renderDet(reset){
+  if(!DET){ showDetLoading(); return; }   // 11-16：det 未到，先占位（后台 ensureDet 就绪后自动 bindDet 渲染）
   const filtered = !!(detState.q || detState.g);
   const vs = detFiltered();
   const wall = $('#detWall'), tbl = $('#tbDet'), wrap = $('#detWrap');
@@ -857,7 +919,10 @@ function bindDrawer(){
   $('#mask').onclick = closeDrawer;
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
 }
-function openDrawer(n){
+async function openDrawer(n){
+  if(!DET){                            // 11-16：明细未就绪先等后台加载（点行通常 det 已在途）
+    try{ await ensureDet(); }catch(e){ toast('明细数据加载失败，请稍后重试'); return; }
+  }
   const v = DETMAP[n]; if(!v) return;
   $('#dName').textContent = n;
   $('#dFull').textContent = v.full || '';
@@ -955,8 +1020,9 @@ window.addEventListener('resize', () => { clearTimeout(__fitT); __fitT = setTime
 // 标签页等可点控件全部离开悬停区（11-06 周老师抓包"标签页 90% 点不中"根因）
 try{ if(window.self !== window.top) document.body.classList.add('host'); }catch(e){}
 /* 免密明文版入口：open 档下任何人直接看，但 flag=closed 仍可即时收回（11-06 周老师三问落地） */
-/* 11-16：加载期给可见提示 + 失败可重试（此前白屏无超时，CDN 一卡就是"半天打不开"） */
-const GATE_LOADING_HTML = '<div class="gate-card"><div class="gico">📊</div><h2>金融 IT 厂商中标看板</h2><div class="gsub">数据加载中…（约 1.2MB，首次打开需几秒）</div></div>';
+/* 11-16：加载期给可见提示 + 失败可重试（此前白屏无超时，CDN 一卡就是"半天打不开"）；
+   二阶提速：首屏只取 ov（~60KB），det 后台静默补 */
+const GATE_LOADING_HTML = '<div class="gate-card"><div class="gico">📊</div><h2>金融 IT 厂商中标看板</h2><div class="gsub">看板加载中…（首屏约 60KB，明细随后后台载入）</div></div>';
 const GATE_RETRY_HTML = '<div class="gate-card"><div class="gico">⚠️</div><h2>数据加载失败</h2><div class="gsub">网络波动，看板数据未能载入</div><button class="gbtn" id="gRetry">重 试</button></div>';
 async function plainEntry(){
   try{
@@ -969,13 +1035,14 @@ async function plainEntry(){
       }
     }
   }catch(e){ /* 开关不可达时放行（明文版无密可保，不放行会影响演示） */ }
-  // 本地侧栏版=单文件内联明文数据（无 payload 文件）；外网版=载荷分离
-  if(!BLOB.payload){ boot(BLOB); return; }
+  // 本地侧栏版=全文件内联明文数据（无 GATE 载荷引用）；外网版=ov/det 分离载荷
+  if(!GATE || !GATE.ov){ boot(BLOB); return; }
   const load = async () => {
     try{
-      const data = await loadPayload(BLOB);
+      const ov = await loadPart('ov');
       gateHide();
-      boot(data);
+      boot({ov});
+      ensureDet();
     }catch(e){
       gateShow(GATE_RETRY_HTML);
       const rb = $('#gRetry');

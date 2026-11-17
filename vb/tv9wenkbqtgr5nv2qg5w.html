@@ -194,6 +194,38 @@ body.host .tabs{position:static;top:auto}
 .drawer .dsub{display:flex;gap:14px;padding:10px 18px;background:#f8fafc;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2);flex-wrap:wrap}
 .drawer .dsub b{color:var(--ink);font-size:14px}
 .drawer .dbody{flex:1;overflow-y:auto;padding:8px 18px 24px}
+/* 11-17 抽屉条目筛选 + 项目检索（周老师需求：多关键词容错/简称/高亮/建议下拉） */
+.drawer .dqbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.drawer .dqbar .search{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:#f8fafc}
+.drawer .dqbar .search:focus-within{border-color:#0b5cad;background:#fff}
+.drawer .dqbar input{border:none;outline:none;background:transparent;flex:1;font-size:12.5px;color:var(--ink);min-width:0}
+.drawer .dqbar .cnt{font-size:11px;color:var(--ink3);white-space:nowrap}
+.drawer .dqbar .clr{border:none;background:none;color:var(--ink3);cursor:pointer;font-size:13px;padding:0 2px}
+mark.hl{background:#fff3bf;color:inherit;border-radius:2px;padding:0 1px}
+mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end}
+.qfield label{display:block;font-size:11.5px;color:var(--ink3);margin-bottom:4px}
+.qfield input{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--ink);background:#fff;box-sizing:border-box}
+.qfield input:focus{border-color:#0b5cad;outline:none}
+.qfield .dates{display:flex;gap:6px;align-items:center}
+.qfield .dates input{flex:1;min-width:0}
+.qbtns{display:flex;gap:8px}
+.sugg{position:relative}
+.suggbox{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(16,30,54,.16);max-height:260px;overflow-y:auto;display:none}
+.suggbox.show{display:block}
+.suggbox .sg-t{font-size:10.5px;color:var(--ink3);padding:7px 12px 3px}
+.suggbox .sg-i{padding:6px 12px;font-size:12.5px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+.suggbox .sg-i:hover{background:#f1f5fb}
+.suggbox .sg-i .amt{color:var(--ink3);font-size:11px;white-space:nowrap}
+.qres{margin-top:12px}
+.qres .rline{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink2);margin-bottom:6px;flex-wrap:wrap;gap:6px}
+.qpages{display:flex;justify-content:center;gap:8px;margin-top:10px;align-items:center}
+.qpages button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 12px;font-size:12px;cursor:pointer}
+.qpages button:disabled{opacity:.4;cursor:default}
+.qpages .pi{font-size:12px;color:var(--ink2)}
+.vlink{color:#0b5cad;cursor:pointer}
+.vlink:hover{text-decoration:underline}
+@media(max-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
 .itm{border-bottom:1px solid var(--line2);padding:10px 0}
 .itm .row1{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
 .itm .pn{font-size:13px;font-weight:600;color:var(--ink);flex:1}
@@ -217,6 +249,16 @@ body.host .tabs{position:static;top:auto}
 .gate-card input:focus{border-color:var(--accent)}
 .gate-card .gerr{color:#c0392b;font-size:12px;margin-top:8px;min-height:16px}
 .gate-card .gbtn{width:100%;margin-top:10px;padding:11px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+/* 11-17 登录台专业版：姓名+密码双字段、无按钮（回车/停顿自动验证）、三振提醒重置 */
+.gate-card .gfield{margin-top:14px;text-align:left}
+.gate-card .gfield label{display:block;font-size:11.5px;color:var(--ink3);margin-bottom:5px;letter-spacing:.05em}
+.gate-card .gfield input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;background:#fbfcfe;color:var(--ink);outline:none;transition:border-color .15s, box-shadow .15s}
+.gate-card .gfield input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(11,92,173,.12);background:#fff}
+.gate-card .gfield input:disabled{opacity:.6}
+.gate-card .gprog{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;font-size:12.5px;color:var(--ink2)}
+.gate-card .gprog .spinner{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:gspin .7s linear infinite}
+@keyframes gspin{to{transform:rotate(360deg)}}
+.gate-card .ghint{margin-top:10px;font-size:12px;color:#8a6d1a;background:#fff8e6;border:1px solid #ecd9a0;border-radius:8px;padding:7px 10px;text-align:left;line-height:1.6}
 .gate-card .gbtn:disabled{opacity:.6;cursor:wait}
 .gate-card .gfoot{margin-top:18px;font-size:10.5px;color:var(--ink3);line-height:1.7}
 .gate-closed{color:#fff;text-align:center}
@@ -277,6 +319,7 @@ body.host .tabs{position:static;top:auto}
     <nav class="tabs">
       <button class="tab on" data-pane="pOv">📊 概览<span class="cnt" id="cOv"></span></button>
       <button class="tab" data-pane="pDet">🏢 厂商明细<span class="cnt" id="cDet"></span></button>
+      <button class="tab" data-pane="pQ">🔎 项目检索</button>
     </nav>
 
     <!-- 概览 -->
@@ -347,6 +390,29 @@ body.host .tabs{position:static;top:auto}
         <div class="loadmore" id="detMore"></div>
       </div>
     </section>
+
+    <!-- 项目检索（11-17 周老师需求：全库组合模糊检索） -->
+    <section class="pane" id="pQ">
+      <div class="card">
+        <div class="chd"><h3>项目检索</h3>
+          <div class="controls"><span style="font-size:11.5px;color:var(--ink3)">全库组合模糊检索 · 多关键词用空格/逗号/顿号等分隔均可 · 招采单位与厂商支持全称/简称</span></div>
+        </div>
+        <div class="cbd">
+          <div class="qgrid">
+            <div class="qfield"><label>起始日期</label><div class="dates"><input type="date" id="qFrom" value="2026-01-01"></div></div>
+            <div class="qfield"><label>截止日期</label><div class="dates"><input type="date" id="qTo"></div></div>
+            <div class="qfield sugg"><label>招采单位（全称/简称）</label><input id="qOrg" placeholder="如：招行 / 招商银行 / 南京分行" autocomplete="off"><div class="suggbox" id="suggOrg"></div></div>
+            <div class="qfield sugg"><label>中标厂商（全称/简称）</label><input id="qVen" placeholder="如：恒生 / 恒生电子股份有限公司" autocomplete="off"><div class="suggbox" id="suggVen"></div></div>
+            <div class="qfield" style="grid-column:span 2"><label>项目名称（多关键词）</label><input id="qTitle" placeholder="如：核心系统 信创 / 服务器 采购" autocomplete="off"></div>
+            <div class="qbtns" style="grid-column:span 2;justify-content:flex-end">
+              <button class="btn btn-ghost" id="qReset">重 置</button>
+              <button class="btn" id="qGo">检 索</button>
+            </div>
+          </div>
+          <div class="qres" id="qRes"><div class="empty">输入条件后点「检索」或按回车；日期默认 2026-01-01 至今</div></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer class="foot">
@@ -363,6 +429,14 @@ body.host .tabs{position:static;top:auto}
     <button class="x" id="dClose">✕</button>
   </div>
   <div class="dsub" id="dSub"></div>
+  <div class="dqbar">
+    <div class="search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></svg>
+      <input id="dQ" placeholder="条目内筛选：多关键词空格/逗号分隔，支持招采单位简称…" autocomplete="off">
+      <button class="clr" id="dQClr" style="display:none">✕</button>
+    </div>
+    <span class="cnt" id="dQCnt"></span>
+  </div>
   <div class="dbody" id="dBody"></div>
 </aside>
 
@@ -371,6 +445,7 @@ body.host .tabs{position:static;top:auto}
 const CDN_BASE = 'https://cdn.jsdelivr.net/gh/zhouhq0571/finance-weekly-report@main/vb/';
 const BLOB = /*__DATA__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"ov":"payload-v3-01c8a7d45c-ov-enc.bin","det":"payload-v3-01c8a7d45c-det-enc.bin"};
 const GATE = /*__GATE__*/{"enc":1,"salt":"k2cQl3sW2oCmGpM7n8+U9A==","wraps":[{"u":"周老师","iv":"Imloctix1vFeGHPG","ct":"xjzrqQgq2TV2EyUwCYa6QgXz5MFoEFbr6uiKxnmmMqzxb1aIAJsHYizrkPNLl7lk"},{"u":"王锋","iv":"9eAihQ6YhMUtotTe","ct":"/3pMkHNvU9wtWTwQW0aJVimmGNkPzd6JCnd5g8wL2Wszz7uDl33rCRqGjoh9plWb"}],"ov":"payload-v3-01c8a7d45c-ov-enc.bin","det":"payload-v3-01c8a7d45c-det-enc.bin"};
+const ORG_ALIAS = /*__ORGALIAS__*/{"工行": ["工商银行"], "农行": ["农业银行", "中国农业银行"], "中行": ["中国银行"], "建行": ["建设银行", "中国建设银行"], "交行": ["交通银行"], "邮储": ["邮储银行", "中国邮政储蓄银行"], "招行": ["招商银行"], "浦发": ["浦发银行"], "兴业": ["兴业银行", "兴业证券", "兴业基金", "兴业信托", "兴业数金", "兴业期货", "兴业资管", "兴业消费金融", "兴业研究", "兴业金租"], "民生": ["民生银行", "中国民生银行", "民生证券", "民生信托", "民生加银", "民生理财", "民生金融租赁"], "光大": ["光大银行", "中国光大银行", "光大证券", "光大信托", "光大金瓯", "光大理财", "光大保德信", "光大期货", "光大云缴费", "光大科技"], "华夏": ["华夏银行", "华夏基金", "华夏证券", "华夏人寿", "华夏久盈", "华夏理财"], "浙商": ["浙商银行", "浙商证券", "浙商基金", "浙商期货", "浙商财险", "浙商资产"], "渤海": ["渤海银行", "渤海证券", "渤海信托", "渤海人寿", "渤海财险", "渤银理财", "渤海期货"], "恒丰": ["恒丰银行"], "广发": ["广发银行", "广发证券", "广发基金", "广发期货", "广发资管", "广银理财"], "平安": ["平安银行", "平安集团", "平安人寿", "平安财险", "平安证券", "平安信托", "平安健康", "平安养老险", "平安理财", "平安科技", "平安付", "平安健康险", "平安资管", "平安融资租赁"], "中信": ["中信银行", "中信证券", "中信建投", "中信信托", "中信期货", "中信保诚", "中信金租", "中信财务", "中信资产", "中信里昂", "百信银行"], "招商": ["招商银行", "招商证券", "招商基金", "招商期货", "招商财富", "招商信诺", "招商仁和", "招银理财", "招商局", "招商租赁", "招商积余"], "建投": ["中信建投"], "国泰": ["国泰海通"], "国君": ["国泰海通"], "海通": ["国泰海通"], "君安": ["国泰海通"], "华泰": ["华泰证券", "华泰柏瑞", "华泰期货", "华泰资管", "华泰金控", "华泰紫金"], "银河": ["中国银河", "银河证券", "银河基金", "银河金汇"], "申万": ["申万宏源", "申万菱信", "申万期货", "申万研究所"], "国信": ["国信证券", "国信期货", "国信资管"], "东方证券": ["东方证券", "东证资管", "东方期货", "东证期货"], "东证": ["东方证券", "东证资管", "东证期货"], "光大理财": ["光大理财"], "易方达": ["易方达"], "嘉实": ["嘉实基金", "嘉实财富", "嘉实资本"], "南方基金": ["南方基金"], "天弘": ["天弘基金"], "博时": ["博时基金"], "富国": ["富国基金"], "汇添富": ["汇添富基金"], "鹏华": ["鹏华基金"], "银华": ["银华基金"], "中欧": ["中欧基金"], "兴全": ["兴证全球", "兴全基金"], "交银": ["交银理财", "交银施罗德", "交银信托", "交银人寿", "交银金租", "交通银行"], "农银": ["农银理财", "农银汇理", "农银人寿", "农银金融资产", "农业银行", "中国农业银行"], "中银": ["中银理财", "中银基金", "中银证券", "中银三星", "中银资产", "中国银行"], "工银": ["工银理财", "工银瑞信", "工银安盛", "工银租赁", "工银投资", "工商银行"], "建信": ["建信理财", "建信基金", "建信信托", "建信人寿", "建信养老", "建信投资", "建信金融科技", "建信住房", "建设银行", "建信财险", "建银国际"], "信银": ["信银理财", "中信银行"], "浦银": ["浦银理财", "浦发银行"], "中邮": ["中邮理财", "中邮保险", "中邮证券", "中邮消费金融", "中国邮政储蓄银行", "邮储银行"], "宁银": ["宁银理财", "宁波银行"], "南银": ["南银理财", "南京银行"], "苏银": ["苏银理财", "江苏银行", "苏银金租"], "杭银": ["杭银理财", "杭州银行"], "沪农": ["上海农商银行", "沪农商行"], "上银": ["上海银行"], "北银": ["北京银行"], "广银": ["广银理财", "广州银行"], "青银": ["青银理财", "青岛银行"], "人保": ["中国人民保险", "人保集团", "人保财险", "人保寿险", "人保健康", "中国人保", "人保养老", "人保资产", "人保资本", "人保再保"], "国寿": ["中国人寿", "国寿财险", "国寿寿险", "国寿养老", "国寿资产", "国寿安保", "国寿投资", "国寿健投"], "太保": ["中国太保", "太平洋保险", "太保寿险", "太保财险", "太保资产", "太平洋健康", "太保科技", "太保养老"], "新华": ["新华保险", "新华人寿", "新华资产", "康健华瑞"], "泰康": ["泰康保险", "泰康人寿", "泰康资产", "泰康养老", "泰康在线", "泰康健投", "泰康之家", "泰康基金"], "太平": ["中国太平", "太平人寿", "太平财险", "太平养老", "太平资产", "太平科技", "太平再保"], "中再": ["中国再保险", "中再产险", "中再寿险", "中再资产", "中再资管"], "友邦": ["友邦保险", "友邦人寿"], "外贸信托": ["外贸信托", "中国对外经济贸易信托"], "中诚信托": ["中诚信托"], "建信信托": ["建信信托"], "平安信托": ["平安信托"], "华润信托": ["华润信托"], "兴业信托": ["兴业信托"], "粤财": ["粤财信托", "粤财控股", "粤财资产"], "五矿信托": ["五矿信托"], "中航信托": ["中航信托"], "光大信托": ["光大信托"], "山东国信": ["山东国信", "山东省国际信托", "山东信托"], "国投泰康": ["国投泰康信托"], "上交所": ["上海证券交易所"], "深交所": ["深圳证券交易所"], "北交所": ["北京证券交易所"], "上期所": ["上海期货交易所"], "中金所": ["中国金融期货交易所"], "中债登": ["中央结算", "中央国债登记结算", "中债"], "上清所": ["银行间市场清算所", "上海清算所"], "外汇交易中心": ["中国外汇交易中心", "全国银行间同业拆借中心"], "票交所": ["上海票据交易所"], "银联": ["中国银联", "银联数据", "银联商务", "银联国际"], "网联": ["网联清算"], "cips": ["人民币跨境支付", "跨境银行间支付清算"], "城银清算": ["城银清算", "城市商业银行资金清算中心"], "银联数据": ["银联数据"], "网联清算": ["网联清算"], "中央结算": ["中央结算", "中央国债登记结算"], "上金所": ["上海黄金交易所"], "大商所": ["大连商品交易所"], "郑商所": ["郑州商品交易所"], "广期所": ["广州期货交易所"], "中国结算": ["中国证券登记结算", "中国结算"], "成方": ["成方金融", "成方金科", "成方汇达", "成方三十二区"], "金电": ["金融电子化", "金电云", "金电信息", "中国金融电子化集团"], "网联清算公司": ["网联清算"], "互金协会": ["互联网金融协会", "中国互联网金融协会"], "交易商协会": ["银行间市场交易商协会"], "支付清算协会": ["支付清算协会", "中国支付清算协会"]};   // 11-17 招采单位口语简称→规范名（build/org_alias.json 注入，双击全/简称检索）
 
 /* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
@@ -436,38 +511,66 @@ async function gateBoot(){
   gateLock();
 }
 
+let __gFails = 0, __gBusy = false, __gAutoT = null;
 function gateLock(){
   gateShow(`
     <div class="gate-card" id="gCard">
       <div class="gico">🔐</div>
       <h2>金融 IT 厂商中标看板</h2>
-      <div class="gsub">数据受保护 · 请输入访问密码</div>
-      <input id="gPwd" type="password" placeholder="访问密码" autocomplete="off" autofocus>
+      <div class="gsub">授权访问</div>
+      <div class="gfield">
+        <label>姓名</label>
+        <input id="gName" type="text" placeholder="请输入姓名" autocomplete="username">
+      </div>
+      <div class="gfield">
+        <label>访问密码</label>
+        <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password">
+      </div>
       <div class="gerr" id="gErr"></div>
-      <button class="gbtn" id="gBtn">解 锁</button>
-      <div class="gfoot">密码按人发放，请勿转发。<br>解锁后数据仅在本次浏览会话中解密。</div>
+      <div class="ghint" id="gHint" style="display:none"></div>
+      <div class="gprog" id="gProg" style="display:none"><span class="spinner"></span>验证中…</div>
     </div>`);
-  const go = () => tryUnlock($('#gPwd').value);
-  $('#gBtn').onclick = go;
-  $('#gPwd').addEventListener('keydown', e => { if(e.key === 'Enter') go(); });
-  $('#gPwd').focus();
+  const nameEl = $('#gName'), pwdEl = $('#gPwd');
+  const go = () => {
+    if(__gBusy) return;
+    const n = nameEl.value.trim(), p = pwdEl.value;
+    if(!n){ nameEl.focus(); return; }
+    if(!p){ pwdEl.focus(); return; }
+    tryUnlock(n, p);
+  };
+  [nameEl, pwdEl].forEach(el => el.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); go(); } }));
+  // 双字段均有输入后停顿 450ms 自动验证——多数情况无需按回车
+  const auto = () => {
+    clearTimeout(__gAutoT);
+    __gAutoT = setTimeout(() => {
+      if(__gBusy) return;
+      const n = nameEl.value.trim(), p = pwdEl.value;
+      if(n && p) tryUnlock(n, p);
+    }, 450);
+  };
+  nameEl.addEventListener('input', auto);
+  pwdEl.addEventListener('input', auto);
+  nameEl.focus();
 }
 
-async function tryUnlock(pwd){
-  if(!pwd) return;
-  const btn = $('#gBtn'), err = $('#gErr');
-  btn.disabled = true; btn.textContent = '解锁中…'; err.textContent = '';
+async function tryUnlock(name, pwd){
+  __gBusy = true;
+  const err = $('#gErr'), hint = $('#gHint'), prog = $('#gProg');
+  err.textContent = ''; hint.style.display = 'none'; prog.style.display = '';
+  $('#gName').disabled = true; $('#gPwd').disabled = true;
   try{
     const enc = new TextEncoder();
     const km = await crypto.subtle.importKey('raw', enc.encode(pwd), 'PBKDF2', false, ['deriveKey']);
     const kek = await crypto.subtle.deriveKey(
       {name:'PBKDF2', salt:b64d(GATE.salt), iterations:310000, hash:'SHA-256'},
       km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+    // 11-17：按人验证——只试该姓名名下的密钥包裹（ faster + 不暴露他人存在性 ）
     let dek = null;
-    for(const w of GATE.wraps){
+    for(const w of (GATE.wraps || [])){
+      if(w.u !== name) continue;
       try{ dek = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(w.iv)}, kek, b64d(w.ct)); break; }catch(e){}
     }
-    if(!dek) throw new Error('bad password');
+    if(!dek) throw new Error('bad credential');
     // 免密会话记忆（11-15）：解锁成功即在本机留 30 分钟会话，期间免密直进
     try{
       const u8 = new Uint8Array(dek);
@@ -476,15 +579,22 @@ async function tryUnlock(pwd){
     }catch(e){}
     const dekKey = await crypto.subtle.importKey('raw', dek, 'AES-GCM', false, ['decrypt']);
     GATE._dekKey = dekKey;
-    btn.textContent = '下载数据…';
     const ov = await loadPart('ov');     // 密码门期间已预取，此处通常秒回
     gateHide();
     boot({ov});
     ensureDet();                         // 明细后台静默补
   }catch(e){
-    err.textContent = '密码不正确，请重试';
+    __gFails++;
+    prog.style.display = 'none';
+    $('#gName').disabled = false; $('#gPwd').disabled = false;
+    err.textContent = '姓名或密码不正确';
     const card = $('#gCard'); card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-    btn.disabled = false; btn.textContent = '解 锁';
+    if(__gFails >= 3){
+      hint.textContent = '已连续输错 ' + __gFails + ' 次，请核对姓名与密码（注意大小写）；如遗忘请联系看板管理员重置。';
+      hint.style.display = '';
+    }
+    $('#gPwd').focus(); $('#gPwd').select();
+    __gBusy = false;
   }
 }
 
@@ -919,6 +1029,7 @@ function bindDrawer(){
   $('#dClose').onclick = closeDrawer;
   $('#mask').onclick = closeDrawer;
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
+  bindDrawerQ();
 }
 async function openDrawer(n){
   if(!DET){                            // 11-16：明细未就绪先等后台加载（点行通常 det 已在途）
@@ -935,16 +1046,10 @@ async function openDrawer(n){
     ${v.g ? `<span>${tagHtml(v.g)}</span>` : ''}
     <button class="btn btn-ghost" id="dPin" style="padding:3px 10px;font-size:11.5px">${isP(n) ? '📌 取消置顶' : '📍 置顶该厂商'}</button>`;
   $('#dPin').onclick = () => { togglePin(n); openDrawer(n); };
-  $('#dBody').innerHTML = items.length ? items.map(x => `
-    <div class="itm">
-      <div class="row1">
-        <div class="pn"><a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.p)}</a></div>
-        <div class="ia num">${x.amt ? fmtWan2(x.amt)+'<small style="color:var(--ink3);font-weight:400"> 万</small>' : '<small style="color:var(--ink3)">未披露</small>'}</div>
-      </div>
-      <div class="row2"><span>${esc(x.d||'')}</span><span class="org">${esc(x.os||'')}</span>${x.note?`<span>${esc(x.note)}</span>`:''}</div>
-    </div>`).join('') : '<div class="empty">该厂商暂无明细记录</div>';
+  __dqState = { items, name: n };
+  const _dq = $('#dQ'); if(_dq){ _dq.value = ''; }
+  renderDrawer(items, []);
   $('#mask').classList.add('show'); $('#drawer').classList.add('show');
-  $('#dBody').scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
 function closeDrawer(){
@@ -953,11 +1058,215 @@ function closeDrawer(){
 }
 
 /* ================= 标签页 ================= */
+/* ================= 多关键词检索工具（11-17：空格/逗号/顿号/分号/竖线/斜杠等分隔容错） ================= */
+const KWSPLIT = /[\s,，、;；|/\\+_~·•]+/;
+function splitKw(s){ return (s||'').split(KWSPLIT).map(x => x.trim().toLowerCase()).filter(Boolean); }
+function hlText(t, kws, cls){
+  const plain = String(t ?? '');
+  if(!kws || !kws.length) return esc(plain);
+  const ks = [...new Set(kws.map(String))].sort((a,b) => b.length - a.length);
+  const re = new RegExp('(' + ks.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+  let out = '', last = 0, m;
+  while((m = re.exec(plain))){
+    out += esc(plain.slice(last, m.index)) + `<mark class="${cls}">${esc(m[0])}</mark>`;
+    last = m.index + m[0].length;
+    if(m[0].length === 0) re.lastIndex++;   // 防空串死循环
+  }
+  return out + esc(plain.slice(last));
+}
+function itemMatch(x, kws, fields){
+  const t = fields.map(f => x[f] || '').join(' ').toLowerCase();
+  return kws.every(k => kwHit(t, k));
+}
+/* 11-17 招采单位口语简称：命中原词或其规范别名（build/org_alias.json）均算 */
+function orgAliasOf(k){ return (ORG_ALIAS[k] || []).map(a => a.toLowerCase()); }
+function kwHit(t, k){ return t.includes(k) || orgAliasOf(k).some(a => t.includes(a)); }
+function expandKws(kws){
+  const out = [...(kws || [])];
+  (kws || []).forEach(k => orgAliasOf(k).forEach(a => { if(!out.includes(a)) out.push(a); }));
+  return out;
+}
+
+/* ================= 抽屉条目筛选（11-17 周老师需求①） ================= */
+let __dqState = { items: [], name: '' };
+function drawerItemHtml(x, kws){
+  const kw = expandKws(kws || []);
+  const title = hlText(x.p, kw, 'hl');
+  const orgKw = kw.filter(k => ((x.os||'') + ' ' + (x.of||'')).toLowerCase().includes(k));
+  const org = hlText(x.os || '', orgKw, 'hl-o');
+  const full = (x.of && orgKw.length) ? `<span style="color:var(--ink3);font-size:11px">（${hlText(x.of, orgKw, 'hl-o')}）</span>` : '';
+  const link = x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${title}</a>` : `<span>${title}</span>`;
+  return `<div class="itm">
+    <div class="row1">
+      <div class="pn">${link}</div>
+      <div class="ia num">${x.amt ? fmtWan2(x.amt)+'<small style="color:var(--ink3);font-weight:400"> 万</small>' : '<small style="color:var(--ink3)">未披露</small>'}</div>
+    </div>
+    <div class="row2"><span>${esc(x.d||'')}</span><span class="org">${org}${full}</span>${x.note?`<span>${esc(x.note)}</span>`:''}</div>
+  </div>`;
+}
+function renderDrawer(items, kws){
+  const list = (kws && kws.length) ? items.filter(x => itemMatch(x, kws, ['p','os','of','note'])) : items;
+  const body = $('#dBody');
+  body.innerHTML = list.length ? list.map(x => drawerItemHtml(x, kws)).join('')
+    : ((kws && kws.length) ? '<div class="empty">无命中条目，试试减少关键词</div>' : '<div class="empty">该厂商暂无明细记录</div>');
+  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = (kws && kws.length) ? `命中 ${list.length}/${items.length} 条` : '';
+  const clr = $('#dQClr'); if(clr) clr.style.display = (kws && kws.length) ? '' : 'none';
+  body.scrollTop = 0;
+  return list.length;
+}
+function bindDrawerQ(){
+  const q = $('#dQ'); if(!q) return;
+  let t = null;
+  q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 160); });
+  q.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); renderDrawer(__dqState.items, splitKw(q.value)); } });
+  $('#dQClr').addEventListener('click', () => { q.value = ''; renderDrawer(__dqState.items, []); q.focus(); });
+}
+
+/* ================= 项目检索主tab（11-17 周老师需求②） ================= */
+let QFLAT = null, __qRes = [], __qPage = 0, __qBound = false, __qInited = false;
+const Q_PAGE = 50;
+const QREC_ORG = 'vb_q_org5', QREC_VEN = 'vb_q_ven5';
+function qRecents(key){ try{ return JSON.parse(localStorage.getItem(key) || '[]'); }catch(e){ return []; } }
+function qPushRecent(key, val){
+  val = (val || '').trim(); if(!val) return;
+  const a = qRecents(key).filter(x => x !== val); a.unshift(val);
+  try{ localStorage.setItem(key, JSON.stringify(a.slice(0, 5))); }catch(e){}
+}
+function buildQFlat(){
+  if(QFLAT) return QFLAT;
+  QFLAT = [];
+  Object.keys(DETMAP).forEach(n => {
+    const v = DETMAP[n];
+    (v.items || []).forEach(x => QFLAT.push({ d: x.d || '', p: x.p || '', u: x.u || '', os: x.os || '', of: x.of || '', amt: x.amt, note: x.note || '', vn: n, vfull: v.full || '' }));
+  });
+  QFLAT.sort((a, b) => (b.d || '').localeCompare(a.d || ''));
+  return QFLAT;
+}
+function top10Vendors(){
+  return Object.keys(DETMAP).map(n => {
+    const v = DETMAP[n];
+    const a = (v.items || []).reduce((s, x) => s + (x.amt || 0), 0);
+    return { n, a, c: (v.items || []).length };
+  }).filter(x => x.c > 0).sort((x, y) => y.a - x.a || y.c - x.c).slice(0, 10);
+}
+function qFieldKws(){ return { okw: splitKw($('#qOrg').value), vkw: splitKw($('#qVen').value), tkw: splitKw($('#qTitle').value) }; }
+function runQuery(page){
+  if(!DET) return;
+  $$('.suggbox').forEach(b => b.classList.remove('show'));   // 检索执行即收起建议
+  const flat = buildQFlat();
+  const from = $('#qFrom').value || '', to = $('#qTo').value || '';
+  const { okw, vkw, tkw } = qFieldKws();
+  const res = [];
+  for(const x of flat){
+    if(from && x.d < from) continue;
+    if(to && x.d > to) continue;
+    if(okw.length  && !okw.every(k => kwHit(((x.os||'') + ' ' + (x.of||'')).toLowerCase(), k))) continue;
+    if(vkw.length  && !vkw.every(k => ((x.vn||'') + ' ' + (x.vfull||'')).toLowerCase().includes(k))) continue;
+    if(tkw.length  && !tkw.every(k => (x.p || '').toLowerCase().includes(k))) continue;
+    res.push(x);
+  }
+  __qRes = res; __qPage = page || 0;
+  if(okw.length)  qPushRecent(QREC_ORG, $('#qOrg').value);
+  if(vkw.length)  qPushRecent(QREC_VEN, $('#qVen').value);
+  renderQRes();
+}
+function renderQRes(){
+  const box = $('#qRes');
+  const { okw, vkw, tkw } = qFieldKws();
+  const total = __qRes.length;
+  if(!total){ box.innerHTML = '<div class="empty">无命中记录，试试放宽条件或减少关键词</div>'; return; }
+  const pages = Math.ceil(total / Q_PAGE);
+  if(__qPage >= pages) __qPage = pages - 1;
+  const slice = __qRes.slice(__qPage * Q_PAGE, (__qPage + 1) * Q_PAGE);
+  const from = $('#qFrom').value || '最早', to = $('#qTo').value || '今天';
+  const rows = slice.map(x => {
+    const title = hlText(x.p, tkw, 'hl');
+    const orgKw = expandKws(okw).filter(k => kwHit(((x.os||'') + ' ' + (x.of||'')).toLowerCase(), k));
+    const org = hlText(x.os || '', orgKw, 'hl-o');
+    const venKw = vkw.filter(k => ((x.vn||'') + ' ' + (x.vfull||'')).toLowerCase().includes(k));
+    const ven = hlText(x.vn || '', venKw, 'hl');
+    return `<tr>
+      <td style="white-space:nowrap">${esc(x.d)}</td>
+      <td class="pn">${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${title}</a>` : title}</td>
+      <td>${org}${(x.of && orgKw.length) ? `<span style="color:var(--ink3);font-size:11px">（${hlText(x.of, orgKw, 'hl-o')}）</span>` : ''}</td>
+      <td><a class="vlink" data-vn="${esc(x.vn)}">${ven}</a></td>
+      <td class="num" style="white-space:nowrap">${x.amt ? fmtWan2(x.amt) : '<span style="color:var(--ink3)">未披露</span>'}</td>
+      <td style="color:var(--ink3);font-size:11.5px">${esc(x.note)}</td>
+    </tr>`;
+  }).join('');
+  box.innerHTML = `<div class="rline"><span>命中 <b>${total}</b> 条 · 日期区间 ${esc(from)} ~ ${esc(to)}</span><span style="color:var(--ink3)">项目名带链接 · 点厂商名打开厂商画像</span></div>
+    <div class="tblwrap"><table class="tb"><colgroup><col style="width:92px"><col><col style="width:190px"><col style="width:120px"><col style="width:96px"><col style="width:220px"></colgroup>
+    <thead><tr><th>日期</th><th>项目名称</th><th>招采单位</th><th>中标厂商</th><th>金额(万)</th><th>来源/阶段</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <div class="qpages"><button id="qPrev" ${__qPage<=0?'disabled':''}>‹ 上一页</button><span class="pi">${__qPage+1} / ${pages}</span><button id="qNext" ${__qPage>=pages-1?'disabled':''}>下一页 ›</button></div>`;
+  const pv = $('#qPrev'), nx = $('#qNext');
+  if(pv) pv.onclick = () => runQuery(__qPage - 1);
+  if(nx) nx.onclick = () => runQuery(__qPage + 1);
+  box.querySelectorAll('.vlink').forEach(a => a.addEventListener('click', () => openDrawer(a.dataset.vn)));
+  fitTables();
+}
+function showSugg(which){
+  const recKey = which === 'org' ? QREC_ORG : QREC_VEN;
+  const box = which === 'org' ? $('#suggOrg') : $('#suggVen');
+  const recents = qRecents(recKey);
+  let html = '';
+  if(recents.length) html += `<div class="sg-t">最近搜索</div>` + recents.map(r => `<div class="sg-i" data-v="${esc(r)}"><span>${esc(r)}</span></div>`).join('');
+  if(which === 'ven'){
+    const tops = top10Vendors();
+    if(tops.length) html += `<div class="sg-t">TOP10 厂商（按已确认金额）</div>` + tops.map(t => `<div class="sg-i" data-v="${esc(t.n)}"><span>${esc(t.n)}</span><span class="amt">${fmtWan(t.a)} · ${t.c}项</span></div>`).join('');
+  }
+  if(!html){ box.classList.remove('show'); return; }
+  box.innerHTML = html;
+  box.querySelectorAll('.sg-i').forEach(i => i.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const inp = which === 'org' ? $('#qOrg') : $('#qVen');
+    inp.value = i.dataset.v; box.classList.remove('show'); runQuery(0);
+  }));
+  box.classList.add('show');
+}
+function bindQOnce(){
+  if(__qBound) return; __qBound = true;
+  const today = new Date(); const pad = n => String(n).padStart(2, '0');
+  $('#qTo').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  let t = null;
+  const live = () => { clearTimeout(t); t = setTimeout(() => runQuery(0), 220); };
+  ['qFrom','qTo','qOrg','qVen','qTitle'].forEach(id => {
+    const el = $('#' + id); if(!el) return;
+    el.addEventListener('input', live);
+    el.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); runQuery(0); } });
+  });
+  $('#qOrg').addEventListener('focus', () => showSugg('org'));
+  $('#qVen').addEventListener('focus', () => showSugg('ven'));
+  // 11-17 修遮挡 bug：点击建议框之外的任意处即关闭（原 blur 延迟导致下拉悬于按钮上方拦截点击）
+  document.addEventListener('mousedown', e => {
+    if(!e.target.closest('.sugg')) $$('.suggbox').forEach(b => b.classList.remove('show'));
+  });
+  $('#qGo').addEventListener('click', () => { clearTimeout(t); runQuery(0); });
+  $('#qReset').addEventListener('click', () => {
+    $('#qFrom').value = '2026-01-01'; $('#qTo').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+    $('#qOrg').value = ''; $('#qVen').value = ''; $('#qTitle').value = '';
+    runQuery(0);
+  });
+}
+function initQPane(){
+  bindQOnce();
+  if(!DET){
+    $('#qRes').innerHTML = '<div class="empty">明细数据加载中…（约 1MB，数秒内自动就绪）</div>';
+    ensureDet().then(() => { buildQFlat(); runQuery(0); }).catch(() => {
+      $('#qRes').innerHTML = '<div class="empty">明细数据加载失败，请切回「厂商明细」页重试</div>';
+    });
+    return;
+  }
+  buildQFlat();
+  if(!__qInited){ __qInited = true; runQuery(0); }
+}
+
 function bindTabs(){
   $$('.tab').forEach(t => t.addEventListener('click', () => {
     $$('.tab').forEach(x => x.classList.remove('on')); t.classList.add('on');
     $$('.pane').forEach(p => p.classList.remove('on'));
     $('#' + t.dataset.pane).classList.add('on');
+    if(t.dataset.pane === 'pQ') initQPane();
     fitTables();
   }));
 }

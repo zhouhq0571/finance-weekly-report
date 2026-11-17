@@ -306,7 +306,6 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
       <h1><span class="logo">🏆</span>金融 IT 厂商中标看板</h1>
       <div class="sub">
         <span>覆盖区间 <b id="mRange">—</b></span>
-        <span>期数 <b id="mPeriods">—</b></span>
         <span>生成时间 <b id="mBuilt">—</b></span>
       </div>
       <div class="actions">
@@ -535,11 +534,9 @@ function gateLock(){
       </div>
       <div class="gfield">
         <label>访问密码</label>
-        <div style="display:flex;gap:8px;align-items:center;height:42px;overflow:visible">
-          <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password" style="flex:1;min-width:0;height:100%;box-sizing:border-box;align-self:center">
-          <button type="button" id="gLogin" class="gbtn" style="width:auto;margin-top:0;padding:0 18px;font-size:13px;flex:none;height:100%;align-self:center;box-sizing:border-box">登 录</button>
-        </div>
+        <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password">
       </div>
+      <button type="button" id="gLogin" class="gbtn">登 录</button>
       <div class="gerr" id="gErr"></div>
       <div class="ghint" id="gHint" style="display:none"></div>
       <div class="gprog" id="gProg" style="display:none"><span class="spinner"></span>验证中…</div>
@@ -735,7 +732,6 @@ function renderMeta(){
   // 11-16：det 后台懒加载——首屏 meta 以 ov.meta（构建期已并入 det.meta 实值）为准，det 就绪后同值
   const m = Object.assign({}, OV.meta || {}, (DET && DET.meta) || {});
   $('#mRange').textContent = m.range || '—';
-  $('#mPeriods').textContent = (OV.periods||[]).length + ' 期';
   $('#mBuilt').textContent = (m.built||'').replace(' ', ' · ') || '—';
   $('#footBuilt').textContent = ' ｜ 本页生成：' + (m.built||'—') + ' · 数据快照随暂存库每日刷新';
   $('#sAmt').innerHTML = fmtWan(m.totA ?? OV.meta?.totA).replace(' 亿','<small> 亿元</small>').replace(' 万','<small> 万元</small>');

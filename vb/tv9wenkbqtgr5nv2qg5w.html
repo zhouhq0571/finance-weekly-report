@@ -548,6 +548,11 @@ function gateLock(){
   };
   [nameEl, pwdEl].forEach(el => el.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); go(); } }));
   // 11-17 修复：停用停顿自动验证（输长密码停顿即误触发、失败后全选吞字）——回车即验
+  // 继续输入即清除上一次错误提示与三振提醒（避免陈旧提示误导）
+  [nameEl, pwdEl].forEach(el => el.addEventListener('input', () => {
+    const e2 = $('#gErr'); if(e2) e2.textContent = '';
+    const h2 = $('#gHint'); if(h2) h2.style.display = 'none';
+  }));
   pwdEl.focus();
 }
 

@@ -32,13 +32,16 @@ a:hover{text-decoration:underline}
 .num{font-variant-numeric:tabular-nums lining-nums}
 
 /* ---------- 顶栏 ---------- */
-.topbar{background:linear-gradient(135deg,#10233f 0%,#0b5cad 120%);color:#fff;padding:18px 20px 16px}
-.topbar .wrap{max-width:1560px  /* 2026-11-15 周老师钦定：宽屏容器1200→1560，配合detwall 4栏=一屏100家 */;margin:0 auto}
-.topbar h1{font-size:19px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.topbar .logo{display:inline-flex;width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.14);align-items:center;justify-content:center;font-size:14px}
-.topbar .sub{margin-top:6px;font-size:12px;color:rgba(255,255,255,.72);display:flex;gap:14px;flex-wrap:wrap}
+.topbar{background:linear-gradient(135deg,#10233f 0%,#0b5cad 120%);color:#fff;padding:16px 20px 13px}
+.topbar .wrap{max-width:1560px  /* 2026-11-15 周老师钦定：宽屏容器1200→1560，配合detwall 4栏=一屏100家 */;margin:0 auto;position:relative}
+.topbar h1{font-size:26px;font-weight:900;letter-spacing:3px;display:flex;align-items:center;justify-content:center;gap:11px;position:relative;padding-bottom:9px;
+  background:linear-gradient(135deg,#ffffff 0%,#f0e6d3 52%,#d4a843 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar h1::after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:72px;height:2.5px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,#d4a843,transparent)}
+.topbar .logo{display:inline-flex;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.14);align-items:center;justify-content:center;font-size:16px;-webkit-text-fill-color:initial}
+.topbar .sub{margin-top:5px;font-size:12px;color:rgba(255,255,255,.72);display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
 .topbar .sub b{color:#fff;font-weight:600}
-.topbar .actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.topbar .actions{position:absolute;right:0;top:0;display:flex;gap:8px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;transition:all .15s}
 .btn-light{background:rgba(255,255,255,.16);color:#fff}
 .btn-light:hover{background:rgba(255,255,255,.26)}
@@ -279,7 +282,8 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
 /* ---------- 移动端 ---------- */
 @media (max-width:640px){
   .topbar{padding:14px 14px 12px}
-  .topbar h1{font-size:16.5px}
+  .topbar h1{font-size:20px;letter-spacing:2px}
+  .topbar .actions{position:static;margin-top:10px}
   .stats{grid-template-columns:repeat(2,1fr);padding:12px 12px 0}
   .stat .val{font-size:18px}
   .tabwrap{padding:0 10px}
@@ -419,10 +423,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
     </section>
   </div>
 
-  <footer class="foot">
-    数据来源：金融要闻周报各期暂存库中标条目聚合 · 金额单位：万元人民币 · 本地侧栏版与外网版由同一零模型管线生成，口径一致。<br>
-    <span id="footBuilt"></span>
-  </footer>
+  <footer class="foot">数据来源：金融要闻周报各期暂存库中标条目聚合 · 金额单位：万元人民币<span id="footBuilt"></span></footer>
 </div>
 
 <!-- 明细抽屉 -->
@@ -535,8 +536,8 @@ function gateLock(){
       <div class="gfield">
         <label>访问密码</label>
         <div style="display:flex;gap:8px;align-items:center">
-          <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password" style="flex:1;min-width:0">
-          <button type="button" id="gLogin" class="gbtn" style="width:auto;margin-top:0;padding:0 18px;font-size:13px;flex:none;align-self:stretch">登 录</button>
+          <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password" style="flex:1;min-width:0;height:42px;box-sizing:border-box">
+          <button type="button" id="gLogin" class="gbtn" style="width:auto;margin-top:0;padding:0 18px;font-size:13px;flex:none;height:42px">登 录</button>
         </div>
       </div>
       <div class="gerr" id="gErr"></div>
@@ -736,7 +737,7 @@ function renderMeta(){
   $('#mRange').textContent = m.range || '—';
   $('#mPeriods').textContent = (OV.periods||[]).length + ' 期';
   $('#mBuilt').textContent = (m.built||'').replace(' ', ' · ') || '—';
-  $('#footBuilt').textContent = '本页生成：' + (m.built||'—') + ' · 数据快照随暂存库每日刷新';
+  $('#footBuilt').textContent = ' ｜ 本页生成：' + (m.built||'—') + ' · 数据快照随暂存库每日刷新';
   $('#sAmt').innerHTML = fmtWan(m.totA ?? OV.meta?.totA).replace(' 亿','<small> 亿元</small>').replace(' 万','<small> 万元</small>');
   // 11-15 周老师功能增进：备注改为披露口径（多少条有金额、占比多少）
   const _dc = m.disC ?? OV.meta?.disC ?? 0, _tc = m.totC ?? OV.meta?.totC ?? 0;
@@ -1213,6 +1214,8 @@ function renderQRes(){
   if(pv) pv.onclick = () => runQuery(__qPage - 1);
   if(nx) nx.onclick = () => runQuery(__qPage + 1);
   box.querySelectorAll('.vlink').forEach(a => a.addEventListener('click', () => openDrawer(a.dataset.vn)));
+  // 11-17 修：结果区每次重渲染，宿主版的导出按钮须在此恢复显示（bindCsv 的首扫会被 innerHTML 重建冲掉）
+  if(window.DaimonWidget){ const qb = $('#qXls'); if(qb) qb.style.display = ''; }
   fitTables();
 }
 function showSugg(which){

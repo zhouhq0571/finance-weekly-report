@@ -536,7 +536,7 @@ function gateLock(){
         <label>访问密码</label>
         <div style="display:flex;gap:8px;align-items:center">
           <input id="gPwd" type="password" placeholder="请输入访问密码" autocomplete="current-password" style="flex:1;min-width:0">
-          <button type="button" id="gLogin" class="gbtn" style="width:auto;margin-top:0;padding:9px 16px;font-size:13px;flex:none">登 录</button>
+          <button type="button" id="gLogin" class="gbtn" style="width:auto;margin-top:0;padding:0 18px;font-size:13px;flex:none;align-self:stretch">登 录</button>
         </div>
       </div>
       <div class="gerr" id="gErr"></div>
@@ -1202,12 +1202,11 @@ function renderQRes(){
       <td>${org}${(x.of && orgKw.length) ? `<span style="color:var(--ink3);font-size:11px">（${hlText(x.of, orgKw, 'hl-o')}）</span>` : ''}</td>
       <td><a class="vlink" data-vn="${esc(x.vn)}">${ven}</a></td>
       <td class="num" style="white-space:nowrap">${x.amt ? fmtWan2(x.amt) : '<span style="color:var(--ink3)">未披露</span>'}</td>
-      <td style="color:var(--ink3);font-size:11.5px">${esc(x.note)}</td>
     </tr>`;
   }).join('');
-  box.innerHTML = `<div class="rline"><span>命中 <b>${total}</b> 条 · 日期区间 ${esc(from)} ~ ${esc(to)}</span><span style="color:var(--ink3)">项目名带链接 · 点厂商名打开厂商画像</span></div>
-    <div class="tblwrap"><table class="tb"><colgroup><col style="width:92px"><col><col style="width:190px"><col style="width:120px"><col style="width:96px"><col style="width:220px"></colgroup>
-    <thead><tr><th>日期</th><th>项目名称</th><th>招采单位</th><th>中标厂商</th><th>金额(万)</th><th>来源/阶段</th></tr></thead>
+  box.innerHTML = `<div class="rline"><span>命中 <b>${total}</b> 条 · 日期区间 ${esc(from)} ~ ${esc(to)}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--ink3)">项目名带链接 · 点厂商名打开厂商画像</span><button class="btn btn-ghost xbtn" id="qXls" style="display:none;padding:3px 10px;font-size:11.5px">📋 导出结果 Excel</button></span></div>
+    <div class="tblwrap"><table class="tb"><colgroup><col style="width:96px"><col><col style="width:210px"><col style="width:130px"><col style="width:100px"></colgroup>
+    <thead><tr><th>日期</th><th>项目名称</th><th>招采单位</th><th>中标厂商</th><th>金额(万)</th></tr></thead>
     <tbody>${rows}</tbody></table></div>
     <div class="qpages"><button id="qPrev" ${__qPage<=0?'disabled':''}>‹ 上一页</button><span class="pi">${__qPage+1} / ${pages}</span><button id="qNext" ${__qPage>=pages-1?'disabled':''}>下一页 ›</button></div>`;
   const pv = $('#qPrev'), nx = $('#qNext');
@@ -1304,9 +1303,23 @@ function bindCsv(){
       busy('#btnXlsItems', '正在生成明细表（5131 条）…');
     }catch(e){ toast('导出提交失败：' + ((e && e.code) || '未知')); }
   };
+  // 11-17 检索结果导出（仅侧栏宿主）：只传检索条件，宿主对同源数据重跑过滤后专业排版
+  document.addEventListener('click', e => {
+    const b = e.target.closest('#qXls'); if(!b) return;
+    try{
+      host.emit('submit', { mode: 'qres', criteria: {
+        from: $('#qFrom').value || '', to: $('#qTo').value || '',
+        org: $('#qOrg').value || '', ven: $('#qVen').value || '', title: $('#qTitle').value || '' } });
+      b.disabled = true; b.textContent = '生成中…';
+    }catch(err){ toast('导出提交失败：' + ((err && err.code) || '未知')); }
+  });
   try{
     host.onDataChange((data) => {
       const m = data && data.main; if(!m) return;
+      if(m.mode === 'qres'){
+        toast(m.summary || '导出未完成', 6000);
+        const qb = $('#qXls'); if(qb){ qb.disabled = false; qb.textContent = '📋 导出结果 Excel'; }
+      }
       if(m.mode === 'vendors' || m.mode === 'items'){
         if(m.path){
           toast(m.summary || ('已生成并用 Excel 打开：' + m.path), 6000);

@@ -33,8 +33,10 @@ a:hover{text-decoration:underline}
 
 /* ---------- 顶栏 ---------- */
 .topbar{background:linear-gradient(135deg,#10233f 0%,#0b5cad 120%);color:#fff;padding:16px 20px 13px}
-/* 2026-11-19 封面个人签章（部署标准同金融要闻周报封底：高清透明PNG，dataURI 仅外网加密页注入，本地组件版不显示） */
-.topseal{position:absolute;z-index:5;right:22px;top:12px;width:54px;height:auto;opacity:.94;pointer-events:none;user-select:none;transform:rotate(-6deg);filter:drop-shadow(0 1px 3px rgba(0,0,0,.28))}
+/* 2026-11-19 封面个人签章（部署标准同金融要闻周报封底：高清透明PNG，dataURI 仅外网加密页注入，本地组件版不显示）
+   11-19 修正：签章原图为竖条（1024×2384），按宽度54px自适应高度将达126px、越过蓝色顶框下沿——
+   改为按高度约束（56px），完整收纳于顶栏蓝色区域内（顶栏内容高约92px），旋转缩至-5°防右上角越界 */
+.topseal{position:absolute;z-index:5;right:26px;top:14px;height:56px;width:auto;max-width:36px;opacity:.94;pointer-events:none;user-select:none;transform:rotate(-5deg);filter:drop-shadow(0 1px 3px rgba(0,0,0,.28))}
 .topbar .wrap{max-width:1560px  /* 2026-11-15 周老师钦定：宽屏容器1200→1560，配合detwall 4栏=一屏100家 */;margin:0 auto;position:relative}
 .topbar h1{font-size:26px;font-weight:900;letter-spacing:3px;display:flex;align-items:center;justify-content:center;gap:11px;position:relative;padding-bottom:9px;
   background:linear-gradient(135deg,#ffffff 0%,#f0e6d3 52%,#d4a843 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -285,6 +287,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
 @media (max-width:640px){
   .topbar{padding:14px 14px 12px}
   .topbar h1{font-size:20px;letter-spacing:2px}
+  .topseal{height:42px;top:11px;right:14px}
   .topbar .actions{position:static;margin-top:10px}
   .stats{grid-template-columns:repeat(2,1fr);padding:12px 12px 0}
   .stat .val{font-size:18px}

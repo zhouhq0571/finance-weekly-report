@@ -250,6 +250,24 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
 .itm .row2{display:flex;gap:10px;margin-top:4px;font-size:11.5px;color:var(--ink3);flex-wrap:wrap}
 .itm .org{color:var(--ink2);font-weight:600}
 
+/* 抽屉明细表（11-20 周老师第三轮：表头+锁定+排序+专业排版；tr沿用.itm类名保持宿主测试选择器兼容） */
+.dtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.dtab thead th{position:sticky;top:0;background:#fff;z-index:3;text-align:left;font-size:11.5px;color:var(--ink3);font-weight:600;padding:8px 6px;border-bottom:2px solid var(--line);white-space:nowrap;box-shadow:0 1px 0 var(--line2)}
+.dtab thead th.sortable{cursor:pointer;user-select:none}
+.dtab thead th.sortable:hover{color:#0b5cad}
+.dtab thead th .sarr{font-size:10px;margin-left:3px;color:#0b5cad}
+.dtab td{padding:9px 6px;border-bottom:1px solid var(--line2);vertical-align:top}
+.dtab tbody tr:nth-child(even){background:#f8fafd}
+.dtab tbody tr:hover{background:#f1f5fb}
+.dtab .c-d{width:88px;white-space:nowrap;color:var(--ink2)}
+.dtab .c-a{width:96px;white-space:nowrap;text-align:right;font-weight:700}
+.dtab th.c-a{text-align:right}
+.dtab .c-a .nd{color:var(--ink3);font-weight:400}
+.dtab .pn{font-size:13px;font-weight:600}
+.dtab .sub{font-size:11.5px;color:var(--ink3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
+.dtab .sub .org{color:var(--ink2);font-weight:600}
+.dtab tfoot td{position:sticky;bottom:0;background:#fff;font-size:11.5px;color:var(--ink3);padding:8px 6px;border-top:2px solid var(--line);white-space:nowrap}
+@media(max-width:760px){.dtab{font-size:12px}.dtab td{padding:8px 4px}.dtab .c-d{width:78px}.dtab .c-a{width:84px}}
 /* ---------- 加载/空态 ---------- */
 .loadmore{text-align:center;padding:14px;color:var(--ink3);font-size:12px}
 
@@ -1071,6 +1089,7 @@ async function openDrawer(n){
     <button class="btn btn-ghost" id="dPin" style="padding:3px 10px;font-size:11.5px">${isP(n) ? '📌 取消置顶' : '📍 置顶该厂商'}</button>`;
   $('#dPin').onclick = () => { togglePin(n); openDrawer(n); };
   __dqState = { items, name: n };
+  __dSort = { k: 'd', dir: -1 };
   const _dq = $('#dQ'); if(_dq){ _dq.value = ''; }
   renderDrawer(items, []);
   $('#mask').classList.add('show'); $('#drawer').classList.add('show');
@@ -1113,6 +1132,19 @@ function expandKws(kws){
 
 /* ================= 抽屉条目筛选（11-17 周老师需求①） ================= */
 let __dqState = { items: [], name: '' };
+let __dSort = { k: 'd', dir: -1 };   // 抽屉明细排序：d=日期 amt=金额（未披露恒沉底；金额首点降序大单在前）
+function dSortList(list){
+  if(!__dSort || !__dSort.k) return list;
+  const f = __dSort.k === 'amt' ? (x => (typeof x.amt === 'number' && x.amt > 0) ? x.amt : null) : (x => x.d || '');
+  return list.slice().sort((a, b) => {
+    const va = f(a), vb = f(b);
+    if(va == null && vb == null) return 0;
+    if(va == null) return 1;
+    if(vb == null) return -1;
+    if(typeof va === 'number') return (va - vb) * __dSort.dir;
+    return String(va).localeCompare(String(vb)) * __dSort.dir;
+  });
+}
 function drawerItemHtml(x, kws){
   const kw = expandKws(kws || []);
   const title = hlText(x.p, kw, 'hl');
@@ -1120,20 +1152,40 @@ function drawerItemHtml(x, kws){
   const org = hlText(x.os || '', orgKw, 'hl-o');
   const full = (x.of && orgKw.length) ? `<span style="color:var(--ink3);font-size:11px">（${hlText(x.of, orgKw, 'hl-o')}）</span>` : '';
   const link = x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${title}</a>` : `<span>${title}</span>`;
-  return `<div class="itm">
-    <div class="row1">
-      <div class="pn">${link}</div>
-      <div class="ia num">${x.amt ? fmtWan2(x.amt)+'<small style="color:var(--ink3);font-weight:400"> 万</small>' : '<small style="color:var(--ink3)">未披露</small>'}</div>
-    </div>
-    <div class="row2"><span>${esc(x.d||'')}</span><span class="org">${org}${full}</span>${x.note?`<span>${esc(x.note)}</span>`:''}</div>
-  </div>`;
+  const sub = `<div class="sub"><span class="org">${org}${full}</span>${x.note ? `<span>${esc(x.note)}</span>` : ''}</div>`;
+  return `<tr class="itm">
+    <td class="c-d">${esc(x.d || '')}</td>
+    <td><div class="pn">${link}</div>${sub}</td>
+    <td class="c-a num">${x.amt ? fmtWan2(x.amt) : '<span class="nd">未披露</span>'}</td>
+  </tr>`;
 }
 function renderDrawer(items, kws){
-  const list = (kws && kws.length) ? items.filter(x => itemMatch(x, kws, ['p','os','of','note'])) : items;
+  const filtered = (kws && kws.length) ? items.filter(x => itemMatch(x, kws, ['p','os','of','note'])) : items;
+  const list = dSortList(filtered);
   const body = $('#dBody');
-  body.innerHTML = list.length ? list.map(x => drawerItemHtml(x, kws)).join('')
+  const arrD = __dSort.k === 'd' ? (__dSort.dir > 0 ? '▲' : '▼') : '';
+  const arrA = __dSort.k === 'amt' ? (__dSort.dir > 0 ? '▲' : '▼') : '';
+  const sumA = filtered.reduce((s, x) => s + (x.amt || 0), 0);
+  const ndN = filtered.filter(x => !(x.amt > 0)).length;
+  body.innerHTML = list.length
+    ? `<table class="dtab"><thead><tr>
+        <th class="sortable" data-dsk="d">日期<span class="sarr">${arrD}</span></th>
+        <th>项目</th>
+        <th class="sortable c-a" data-dsk="amt">金额(万)<span class="sarr">${arrA}</span></th>
+      </tr></thead><tbody>${list.map(x => drawerItemHtml(x, kws)).join('')}</tbody>
+      <tfoot><tr><td colspan="3">合计（已披露）<b>${fmtWan(sumA)}</b>${ndN ? ` · 未披露 ${ndN} 条` : ''}</td></tr></tfoot></table>`
     : ((kws && kws.length) ? '<div class="empty">无命中条目，试试减少关键词</div>' : '<div class="empty">该厂商暂无明细记录</div>');
-  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = (kws && kws.length) ? `命中 ${list.length}/${items.length} 条` : '';
+  $$('#dBody th.sortable').forEach(th => th.onclick = () => {
+    const k = th.dataset.dsk;
+    if(__dSort.k === k){
+      __dSort.dir = __dSort.dir > 0 ? -1 : +1;
+      if(k !== 'd' && __dSort.dir === (k === 'amt' ? -1 : +1)) __dSort = { k: 'd', dir: -1 };
+    }else{
+      __dSort = { k, dir: (k === 'amt' ? -1 : +1) };
+    }
+    renderDrawer(__dqState.items, splitKw($('#dQ').value));
+  });
+  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = (kws && kws.length) ? `命中 ${filtered.length}/${items.length} 条` : '';
   const clr = $('#dQClr'); if(clr) clr.style.display = (kws && kws.length) ? '' : 'none';
   body.scrollTop = 0;
   return list.length;

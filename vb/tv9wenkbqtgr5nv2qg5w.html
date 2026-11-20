@@ -202,7 +202,12 @@ body.host .tabs{position:static;top:auto}
 .drawer .dsub b{color:var(--ink);font-size:14px}
 .drawer .dbody{flex:1;overflow-y:auto;padding:8px 18px 24px}
 /* 11-17 抽屉条目筛选 + 项目检索（周老师需求：多关键词容错/简称/高亮/建议下拉） */
-.drawer .dqbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.drawer .dqbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.drawer .dbig{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--ink2);white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:#f8fafc;cursor:pointer;user-select:none}
+.drawer .dbig input[type=checkbox]{accent-color:#0b5cad;margin:0}
+.drawer .dbig input[type=number]{width:74px;border:1px solid var(--line);border-radius:6px;padding:2px 4px;font-size:11.5px;text-align:right;background:#fff;color:var(--ink)}
+.drawer .dbig input[type=number]:disabled{opacity:.45;background:transparent;border-color:transparent}
+.drawer .dbig.on{border-color:#0b5cad;background:#e7f0fa;color:#0b5cad}
 .drawer .dqbar .search{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:#f8fafc}
 .drawer .dqbar .search:focus-within{border-color:#0b5cad;background:#fff}
 .drawer .dqbar input{border:none;outline:none;background:transparent;flex:1;font-size:12.5px;color:var(--ink);min-width:0}
@@ -469,6 +474,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
       <input id="dQ" placeholder="条目内筛选：多关键词空格/逗号分隔，支持招采单位简称…" autocomplete="off">
       <button class="clr" id="dQClr" style="display:none">✕</button>
     </div>
+    <label class="dbig" id="dBig"><input type="checkbox" id="dBigChk"><span>只看大单 ≥</span><input type="number" id="dBigAmt" value="1000" min="0" step="any" disabled><span>万</span></label>
     <span class="cnt" id="dQCnt"></span>
   </div>
   <div class="dbody" id="dBody"></div>
@@ -1090,6 +1096,7 @@ async function openDrawer(n){
   $('#dPin').onclick = () => { togglePin(n); openDrawer(n); };
   __dqState = { items, name: n };
   __dSort = { k: 'd', dir: -1 };
+  const _bc = $('#dBigChk'); if(_bc){ _bc.checked = false; $('#dBig').classList.remove('on'); $('#dBigAmt').disabled = true; $('#dBigAmt').value = '1000'; }
   const _dq = $('#dQ'); if(_dq){ _dq.value = ''; }
   renderDrawer(items, []);
   $('#mask').classList.add('show'); $('#drawer').classList.add('show');
@@ -1133,6 +1140,13 @@ function expandKws(kws){
 /* ================= 抽屉条目筛选（11-17 周老师需求①） ================= */
 let __dqState = { items: [], name: '' };
 let __dSort = { k: 'd', dir: -1 };   // 抽屉明细排序：d=日期 amt=金额（未披露恒沉底；金额首点降序大单在前）
+function dBigActive(){
+  const chk = $('#dBigChk');
+  if(!chk || !chk.checked) return null;
+  const raw = ($('#dBigAmt').value || '').trim();
+  const v = Number(raw);
+  return (raw !== '' && isFinite(v) && v >= 0) ? v : 1000;   // 空/非法回退默认1000万
+}
 function dSortList(list){
   if(!__dSort || !__dSort.k) return list;
   const f = __dSort.k === 'amt' ? (x => (typeof x.amt === 'number' && x.amt > 0) ? x.amt : null) : (x => x.d || '');
@@ -1160,7 +1174,9 @@ function drawerItemHtml(x, kws){
   </tr>`;
 }
 function renderDrawer(items, kws){
-  const filtered = (kws && kws.length) ? items.filter(x => itemMatch(x, kws, ['p','os','of','note'])) : items;
+  let filtered = (kws && kws.length) ? items.filter(x => itemMatch(x, kws, ['p','os','of','note'])) : items;
+  const bigAmt = dBigActive();   // 大单闸：与关键词 AND；未披露金额条目自然排除
+  if(bigAmt != null) filtered = filtered.filter(x => (typeof x.amt === 'number' && x.amt > 0 && x.amt >= bigAmt));
   const list = dSortList(filtered);
   const body = $('#dBody');
   const arrD = __dSort.k === 'd' ? (__dSort.dir > 0 ? '▲' : '▼') : '';
@@ -1185,7 +1201,7 @@ function renderDrawer(items, kws){
     }
     renderDrawer(__dqState.items, splitKw($('#dQ').value));
   });
-  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = (kws && kws.length) ? `命中 ${filtered.length}/${items.length} 条` : '';
+  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = ((kws && kws.length) ? `命中 ${filtered.length}/${items.length} 条` : '') + (bigAmt != null ? ` · 大单≥${bigAmt}万` : '');
   const clr = $('#dQClr'); if(clr) clr.style.display = (kws && kws.length) ? '' : 'none';
   body.scrollTop = 0;
   return list.length;
@@ -1193,6 +1209,16 @@ function renderDrawer(items, kws){
 function bindDrawerQ(){
   const q = $('#dQ'); if(!q) return;
   let t = null;
+  const _big = $('#dBig'), _chk = $('#dBigChk'), _amt = $('#dBigAmt');
+  if(_chk){
+    _chk.addEventListener('change', () => {
+      _big.classList.toggle('on', _chk.checked);
+      _amt.disabled = !_chk.checked;
+      renderDrawer(__dqState.items, splitKw(q.value));
+    });
+    _amt.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 200); });
+    _amt.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); renderDrawer(__dqState.items, splitKw(q.value)); } });
+  }
   q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 160); });
   q.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); renderDrawer(__dqState.items, splitKw(q.value)); } });
   $('#dQClr').addEventListener('click', () => { q.value = ''; renderDrawer(__dqState.items, []); q.focus(); });

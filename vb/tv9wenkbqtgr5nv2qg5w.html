@@ -1181,7 +1181,7 @@ function parseAmtBound(el){
 function amtCondText(){
   const f = ($('#qAmtFrom').value || '').trim(), t = ($('#qAmtTo').value || '').trim();
   if(!f && !t) return '';
-  const fs = (f !== '' && Number(f) > 0) ? Number(f).toLocaleString() : '0(含未披露)';
+  const fs = (f !== '' && Number(f) > 0) ? Number(f).toLocaleString() + '万' : '0(含未披露)';
   const ts = (t !== '') ? Number(t).toLocaleString() + '万' : '不限';
   return ` · 金额 ${fs} ~ ${ts}`;
 }

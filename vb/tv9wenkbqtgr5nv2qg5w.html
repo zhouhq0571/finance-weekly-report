@@ -200,7 +200,8 @@ body.host .tabs{position:static;top:auto}
 .drawer .dhd .x{border:none;background:#eef1f6;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:15px;color:var(--ink2);flex:none}
 .drawer .dsub{display:flex;gap:14px;padding:10px 18px;background:#f8fafc;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2);flex-wrap:wrap}
 .drawer .dsub b{color:var(--ink);font-size:14px}
-.drawer .dbody{flex:1;overflow-y:auto;padding:0 18px 24px}
+.drawer .dbody{flex:1;overflow-y:auto;padding:0 18px}
+.drawer .dfoot{flex:none;padding:9px 18px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink3);background:#fff;white-space:nowrap}
 .drawer .dbody .empty{padding:14px 0}
 /* 11-17 抽屉条目筛选 + 项目检索（周老师需求：多关键词容错/简称/高亮/建议下拉） */
 .drawer .dqbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -483,6 +484,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
     <span class="cnt" id="dQCnt"></span>
   </div>
   <div class="dbody" id="dBody"></div>
+  <div class="dfoot" id="dFoot"></div>
 </aside>
 
 <script>
@@ -1203,8 +1205,10 @@ function renderDrawer(items, kws){
         <th>项目</th>
         <th class="sortable c-a" data-dsk="amt">金额(万)<span class="sarr">${arrA}</span></th>
       </tr></thead><tbody>${list.map(x => drawerItemHtml(x, kws)).join('')}</tbody>
-      <tfoot><tr><td colspan="3">共 ${filtered.length} 条 · 合计（已披露）<b>${fmtWan(sumA)}</b>${ndN ? ` · 未披露 ${ndN} 条` : ''}</td></tr></tfoot></table>`
+      </table>`
     : ((kws && kws.length) ? '<div class="empty">无命中条目，试试减少关键词</div>' : '<div class="empty">该厂商暂无明细记录</div>');
+  const dfoot = $('#dFoot');
+  if(dfoot) dfoot.innerHTML = `共 ${filtered.length} 条 · 合计（已披露）<b>${fmtWan(sumA)}</b>${ndN ? ` · 未披露 ${ndN} 条` : ''}`;
   $$('#dBody th.sortable').forEach(th => th.onclick = () => {
     const k = th.dataset.dsk;
     if(__dSort.k === k){

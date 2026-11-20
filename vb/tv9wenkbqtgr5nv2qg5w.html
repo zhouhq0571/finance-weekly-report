@@ -210,7 +210,7 @@ body.host .tabs{position:static;top:auto}
 .drawer .dqbar .clr{border:none;background:none;color:var(--ink3);cursor:pointer;font-size:13px;padding:0 2px}
 mark.hl{background:#fff3bf;color:inherit;border-radius:2px;padding:0 1px}
 mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
-.qgrid{display:grid;grid-template-columns:264px 1fr 1fr 1.35fr auto;gap:10px;align-items:end}
+.qgrid{display:grid;grid-template-columns:264px 186px 1fr 1fr 1.2fr auto;gap:10px;align-items:end}
 .qfield label{display:block;font-size:11.5px;color:var(--ink3);margin-bottom:4px}
 .qfield input{width:100%;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--ink);background:#fff;box-sizing:border-box}
 .qfield input:focus{border-color:#0b5cad;outline:none}
@@ -218,6 +218,8 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
 .qfield .dates input{flex:1;min-width:0}
 .qfield .dates .dlab{font-size:11px;color:var(--ink3);flex:none}
 .qfield .dates .dsep{color:var(--ink3);flex:none;font-size:12px}
+.qfield .amts input[type=number]::-webkit-inner-spin-button{opacity:.35}
+.qfield .amts input.bad{border-color:#e03131!important}
 .qbtns{display:flex;gap:8px}
 .sugg{position:relative}
 .suggbox{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:30;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 28px rgba(16,30,54,.16);max-height:260px;overflow-y:auto;display:none}
@@ -234,7 +236,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
 .qpages .pi{font-size:12px;color:var(--ink2)}
 .vlink{color:#0b5cad;cursor:pointer}
 .vlink:hover{text-decoration:underline}
-@media(max-width:1120px){.qgrid{grid-template-columns:264px 1fr 1fr}.qgrid .qspan2{grid-column:span 2}}
+@media(max-width:1120px){.qgrid{grid-template-columns:264px 1fr 1fr}}
   @media(max-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
 .itm{border-bottom:1px solid var(--line2);padding:10px 0}
 .itm .row1{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
@@ -409,11 +411,12 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
     <section class="pane" id="pQ">
       <div class="card">
         <div class="chd"><h3>项目检索</h3>
-          <div class="controls"><span style="font-size:11.5px;color:var(--ink3)">全库组合模糊检索 · 多关键词用空格/逗号/顿号等分隔均可 · 招采单位与厂商支持全称/简称</span></div>
+          <div class="controls"><span style="font-size:11.5px;color:var(--ink3)">全库组合模糊检索 · 多关键词用空格/逗号/顿号等分隔均可 · 招采单位与厂商支持全称/简称 · 金额单位万元：起始空=0（含未披露），截止空=不限</span></div>
         </div>
         <div class="cbd">
           <div class="qgrid">
             <div class="qfield"><label>日期区间</label><div class="dates"><input type="date" id="qFrom" value="2026-01-01"><span class="dsep">~</span><input type="date" id="qTo"></div></div>
+            <div class="qfield"><label>中标金额（万元）</label><div class="dates amts"><input type="number" id="qAmtFrom" min="0" step="any" placeholder="起"><span class="dsep">~</span><input type="number" id="qAmtTo" min="0" step="any" placeholder="止"></div></div>
             <div class="qfield sugg"><label>招采单位（全称/简称）</label><input id="qOrg" placeholder="如：招行 / 招商银行 / 南京分行" autocomplete="off"><div class="suggbox" id="suggOrg"></div></div>
             <div class="qfield sugg"><label>中标厂商（全称/简称）</label><input id="qVen" placeholder="如：恒生 / 恒生电子股份有限公司" autocomplete="off"><div class="suggbox" id="suggVen"></div></div>
             <div class="qfield qspan2"><label>项目名称（多关键词）</label><input id="qTitle" placeholder="如：核心系统 信创 / 服务器 采购" autocomplete="off"></div>
@@ -1167,6 +1170,21 @@ function top10Vendors(){
     return { n, a, c: (v.items || []).length };
   }).filter(x => x.c > 0).sort((x, y) => y.c - x.c || y.a - x.a).slice(0, 10);
 }
+function parseAmtBound(el){
+  const raw = (el.value || '').trim();
+  el.classList.toggle('bad', false);
+  if(raw === '') return null;
+  const v = Number(raw);
+  if(!isFinite(v) || v < 0){ el.classList.add('bad'); return null; }  // 非法输入=忽略该格（红框提示）
+  return v;
+}
+function amtCondText(){
+  const f = ($('#qAmtFrom').value || '').trim(), t = ($('#qAmtTo').value || '').trim();
+  if(!f && !t) return '';
+  const fs = (f !== '' && Number(f) > 0) ? Number(f).toLocaleString() : '0(含未披露)';
+  const ts = (t !== '') ? Number(t).toLocaleString() + '万' : '不限';
+  return ` · 金额 ${fs} ~ ${ts}`;
+}
 function qFieldKws(){ return { okw: splitKw($('#qOrg').value), vkw: splitKw($('#qVen').value), tkw: splitKw($('#qTitle').value) }; }
 function runQuery(page){
   if(!DET) return;
@@ -1174,10 +1192,18 @@ function runQuery(page){
   const flat = buildQFlat();
   const from = $('#qFrom').value || '', to = $('#qTo').value || '';
   const { okw, vkw, tkw } = qFieldKws();
+  const amtFrom = parseAmtBound($('#qAmtFrom')), amtTo = parseAmtBound($('#qAmtTo'));
   const res = [];
   for(const x of flat){
     if(from && x.d < from) continue;
     if(to && x.d > to) continue;
+    // 金额闸：x.amt 空/0=未披露；起始>0 未披露排除；起始空/0 含未披露且不受截止约束；截止空=不限
+    const a = (typeof x.amt === 'number' && x.amt > 0) ? x.amt : null;
+    if(a == null){ if(amtFrom != null && amtFrom > 0) continue; }
+    else{
+      if(amtFrom != null && a < amtFrom) continue;
+      if(amtTo   != null && a > amtTo)   continue;
+    }
     if(okw.length  && !okw.every(k => kwHit(((x.os||'') + ' ' + (x.of||'')).toLowerCase(), k))) continue;
     if(vkw.length  && !vkw.every(k => ((x.vn||'') + ' ' + (x.vfull||'')).toLowerCase().includes(k))) continue;
     if(tkw.length  && !tkw.every(k => (x.p || '').toLowerCase().includes(k))) continue;
@@ -1211,7 +1237,8 @@ function renderQRes(){
       <td class="num" style="white-space:nowrap">${x.amt ? fmtWan2(x.amt) : '<span style="color:var(--ink3)">未披露</span>'}</td>
     </tr>`;
   }).join('');
-  box.innerHTML = `<div class="rline"><span>命中 <b>${total}</b> 条 · 日期区间 ${esc(from)} ~ ${esc(to)}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--ink3)">项目名带链接 · 点厂商名打开厂商画像</span><button class="btn btn-ghost xbtn" id="qXls" style="display:none;padding:3px 10px;font-size:11.5px">📋 导出结果 Excel</button></span></div>
+  const undisc = (__qRes.filter(x => !(x.amt > 0)).length) || 0;
+  box.innerHTML = `<div class="rline"><span>命中 <b>${total}</b> 条 · 日期区间 ${esc(from)} ~ ${esc(to)}${amtCondText()}${undisc ? ` · 其中未披露 ${undisc}` : ''}</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--ink3)">项目名带链接 · 点厂商名打开厂商画像</span><button class="btn btn-ghost xbtn" id="qXls" style="display:none;padding:3px 10px;font-size:11.5px">📋 导出结果 Excel</button></span></div>
     <div class="tblwrap"><table class="tb"><colgroup><col style="width:96px"><col><col style="width:210px"><col style="width:130px"><col style="width:100px"></colgroup>
     <thead><tr><th>日期</th><th>项目名称</th><th>招采单位</th><th>中标厂商</th><th>金额(万)</th></tr></thead>
     <tbody>${rows}</tbody></table></div>
@@ -1249,7 +1276,7 @@ function bindQOnce(){
   $('#qTo').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
   let t = null;
   const live = () => { clearTimeout(t); t = setTimeout(() => runQuery(0), 220); };
-  ['qFrom','qTo','qOrg','qVen','qTitle'].forEach(id => {
+  ['qFrom','qTo','qAmtFrom','qAmtTo','qOrg','qVen','qTitle'].forEach(id => {
     const el = $('#' + id); if(!el) return;
     el.addEventListener('input', live);
     el.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); runQuery(0); } });
@@ -1264,6 +1291,7 @@ function bindQOnce(){
   $('#qReset').addEventListener('click', () => {
     $('#qFrom').value = '2026-01-01'; $('#qTo').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
     $('#qOrg').value = ''; $('#qVen').value = ''; $('#qTitle').value = '';
+    $('#qAmtFrom').value = ''; $('#qAmtTo').value = '';
     runQuery(0);
   });
 }
@@ -1318,7 +1346,8 @@ function bindCsv(){
     try{
       host.emit('submit', { mode: 'qres', criteria: {
         from: $('#qFrom').value || '', to: $('#qTo').value || '',
-        org: $('#qOrg').value || '', ven: $('#qVen').value || '', title: $('#qTitle').value || '' } });
+        org: $('#qOrg').value || '', ven: $('#qVen').value || '', title: $('#qTitle').value || '',
+        amtFrom: $('#qAmtFrom').value || '', amtTo: $('#qAmtTo').value || '' } });
       b.disabled = true; b.textContent = '生成中…';
     }catch(err){ toast('导出提交失败：' + ((err && err.code) || '未知')); }
   });

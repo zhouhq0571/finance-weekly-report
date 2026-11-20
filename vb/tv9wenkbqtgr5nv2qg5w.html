@@ -205,10 +205,14 @@ body.host .tabs{position:static;top:auto}
 /* 11-17 抽屉条目筛选 + 项目检索（周老师需求：多关键词容错/简称/高亮/建议下拉） */
 .drawer .dqbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .drawer .damt{display:flex;align-items:center;gap:3px;font-size:11.5px;color:var(--ink2);white-space:nowrap}
-.drawer .damt input[type=number]{width:64px;border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;text-align:right;background:#fff;color:var(--ink)}
-.drawer .damt input[type=number]:focus{border-color:#0b5cad;outline:none}
+.drawer .damt input{width:60px;border:1px solid var(--line);border-radius:8px;padding:5px 6px;font-size:12px;text-align:right;background:#fff;color:var(--ink)}
+.drawer .damt input:focus{border-color:#0b5cad;outline:none}
+.drawer .damt input.onf{border-color:#0b5cad;box-shadow:0 0 0 2px rgba(11,92,173,.12)}
+.drawer .damt input::-webkit-outer-spin-button,.drawer .damt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .drawer .damt .u{color:var(--ink3)}
-.drawer .damt select{border:1px solid var(--line);border-radius:8px;padding:4px 2px;font-size:12px;background:#fff;color:var(--ink);cursor:pointer}
+.drawer .damt .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.drawer .damt .seg button{border:none;background:#fff;padding:5px 8px;font-size:12px;color:var(--ink3);cursor:pointer;line-height:1}
+.drawer .damt .seg button.on{background:#0b5cad;color:#fff}
 .drawer .dqbar .search{flex:1;display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:5px 10px;background:#f8fafc}
 .drawer .dqbar .search:focus-within{border-color:#0b5cad;background:#fff}
 .drawer .dqbar input{border:none;outline:none;background:transparent;flex:1;font-size:12.5px;color:var(--ink);min-width:0}
@@ -475,7 +479,7 @@ mark.hl-o{background:#d3f9d8;border-radius:2px;padding:0 1px}
       <input id="dQ" placeholder="条目内筛选：多关键词空格/逗号分隔，支持招采单位简称…" autocomplete="off">
       <button class="clr" id="dQClr" style="display:none">✕</button>
     </div>
-    <span class="damt"><input type="number" id="dAmtN" value="500" min="0" step="any" title="留空=不筛选"><span class="u">万</span><select id="dAmtDir" title="以上=≥，以下=≤"><option value="above">以上</option><option value="below">以下</option></select></span>
+    <span class="damt" title="金额筛选：输入数字约1.2秒自动生效（回车立即生效）；点「以上/以下」立即生效，输入框空时自动按500万"><input type="text" id="dAmtN" inputmode="decimal" placeholder="不限" autocomplete="off"><span class="u">万</span><span class="seg"><button id="dAmtAbove" class="on">以上</button><button id="dAmtBelow">以下</button></span></span>
     <span class="cnt" id="dQCnt"></span>
   </div>
   <div class="dbody" id="dBody"></div>
@@ -1097,7 +1101,7 @@ async function openDrawer(n){
   $('#dPin').onclick = () => { togglePin(n); openDrawer(n); };
   __dqState = { items, name: n };
   __dSort = { k: 'd', dir: -1 };
-  const _n2 = $('#dAmtN'); if(_n2){ _n2.value = '500'; $('#dAmtDir').value = 'above'; }
+  const _n2 = $('#dAmtN'); if(_n2){ _n2.value = ''; __dDir = 'above'; }
   const _dq = $('#dQ'); if(_dq){ _dq.value = ''; }
   renderDrawer(items, []);
   $('#mask').classList.add('show'); $('#drawer').classList.add('show');
@@ -1141,13 +1145,20 @@ function expandKws(kws){
 /* ================= 抽屉条目筛选（11-17 周老师需求①） ================= */
 let __dqState = { items: [], name: '' };
 let __dSort = { k: 'd', dir: -1 };   // 抽屉明细排序：d=日期 amt=金额（未披露恒沉底；金额首点降序大单在前）
+let __dDir = 'above';   // 抽屉金额快筛方向：above=以上(≥) below=以下(≤)
 function dAmtFilter(){
-  // 抽屉金额快筛（11-20 第四轮改版：无勾选框，默认500万以上；清空输入=不筛选；以上=≥/以下=≤，未披露条目自然排除）
-  const raw = ($('#dAmtN').value || '').trim();
+  // 11-20 第五轮定型：默认全量不筛；输入数字生效（防抖1.2s/回车立即）；方向钮点击立即生效且空值自动按500万；未披露条目自然排除
+  const raw = ($('#dAmtN').value || '').trim().replace(/,/g, '');
   if(raw === '') return null;
   const v = Number(raw);
   if(!isFinite(v) || v < 0) return null;
-  return { v, dir: ($('#dAmtDir').value === 'below') ? 'below' : 'above' };
+  return { v, dir: __dDir };
+}
+function dAmtRefreshCue(){
+  const on = dAmtFilter() != null;
+  const n = $('#dAmtN'); if(n) n.classList.toggle('onf', on);
+  $('#dAmtAbove').classList.toggle('on', __dDir === 'above');
+  $('#dAmtBelow').classList.toggle('on', __dDir === 'below');
 }
 function dSortList(list){
   if(!__dSort || !__dSort.k) return list;
@@ -1204,7 +1215,8 @@ function renderDrawer(items, kws){
     }
     renderDrawer(__dqState.items, splitKw($('#dQ').value));
   });
-  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = ((kws && kws.length) ? `命中 ${filtered.length}/${items.length} 条` : '') + (damt != null ? ` · 金额${damt.dir === 'above' ? '≥' : '≤'}${damt.v}万` : '');
+  dAmtRefreshCue();
+  const cnt = $('#dQCnt'); if(cnt) cnt.textContent = (kws && kws.length) ? `命中 ${filtered.length}/${items.length} 条` : '';
   const clr = $('#dQClr'); if(clr) clr.style.display = (kws && kws.length) ? '' : 'none';
   body.scrollTop = 0;
   return list.length;
@@ -1212,11 +1224,14 @@ function renderDrawer(items, kws){
 function bindDrawerQ(){
   const q = $('#dQ'); if(!q) return;
   let t = null;
-  const _n = $('#dAmtN'), _dir = $('#dAmtDir');
+  const _n = $('#dAmtN');
   if(_n){
-    _n.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 200); });
+    _n.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 1200); });
     _n.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); renderDrawer(__dqState.items, splitKw(q.value)); } });
-    _dir.addEventListener('change', () => renderDrawer(__dqState.items, splitKw(q.value)));
+    const _seg = (dir) => { clearTimeout(t); __dDir = dir; if(!(_n.value || '').trim()) _n.value = '500';
+      renderDrawer(__dqState.items, splitKw(q.value)); };
+    $('#dAmtAbove').addEventListener('click', () => _seg('above'));
+    $('#dAmtBelow').addEventListener('click', () => _seg('below'));
   }
   q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => renderDrawer(__dqState.items, splitKw(q.value)), 160); });
   q.addEventListener('keydown', e => { if(e.key === 'Enter'){ clearTimeout(t); renderDrawer(__dqState.items, splitKw(q.value)); } });
